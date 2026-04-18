@@ -1,14 +1,28 @@
+import "./Profile.css";
 import type {User} from "../api/types.ts";
+import {Trash, User as UserIcon} from "react-feather";
 
 type ProfileProps = {
 	user: User;
-	onClick: (id: string) => void;
+	select: (id: string) => void;
+	remove: (id: string) => void;
 };
 
-export default function Profile({ user, onClick }: ProfileProps) {
+export default function Profile({user, select, remove}: ProfileProps) {
 	return (
-		<div onClick={() => {onClick(user.id)}}>
-			{user.username} - {user.permissions.join(", ")}
+		<div onClick={() => {
+			select(user.id)
+		}} className={"profile"}>
+			<div className={"profile-image"}>
+				<UserIcon/>
+			</div>
+			<div className={"profile-username"}>{user.username}</div>
+			<button className={"profile-delete"} onClick={(event) => {
+				event.stopPropagation();
+				remove(user.id);
+			}}>
+				<Trash/>
+			</button>
 		</div>
 	)
 }

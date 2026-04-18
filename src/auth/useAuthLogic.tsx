@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { client } from "../api/api";
-import type { User, LoginResponse } from "../api/types";
+import {useEffect, useState} from "react";
+import {client} from "../api/api";
+import type {User, LoginResponse} from "../api/types";
 import {
 	clearLastUsedAccountId,
 	loadAccounts,
@@ -61,7 +61,7 @@ export function useAuthLogic() {
 		const me = await client.whoAmI();
 		const nextAccounts = [
 			...accounts.filter((account) => account.user.id !== me.id),
-			{ user: me, token: response.accessToken },
+			{user: me, token: response.accessToken},
 		];
 
 		setAccounts(nextAccounts);
@@ -90,5 +90,17 @@ export function useAuthLogic() {
 		clearLastUsedAccountId();
 	};
 
-	return { status, user, accounts, login, logout, switchAccount };
+	const removeAccount = (userId: string) => {
+		if (user?.id === userId) {
+			setUser(null);
+			setStatus("loggedOut");
+			clearLastUsedAccountId();
+		}
+
+		const newAccounts = accounts.filter(x => x.user.id !== userId);
+		setAccounts(newAccounts);
+		saveAccounts(newAccounts);
+	}
+
+	return {status, user, accounts, login, logout, switchAccount, removeAccount};
 }

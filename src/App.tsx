@@ -33,6 +33,7 @@ function AppRoutes() {
 					</ProtectedRoute>
 				}
 			/>
+			<Route path="/splash" element={<SplashScreen/>}/>
 			<Route path="/login" element={<Login/>}/>
 			<Route path="/profiles" element={<Profiles/>}/>
 		</Routes>

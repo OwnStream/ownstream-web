@@ -1,3 +1,4 @@
+import "./Login.css";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../auth/AuthContext.tsx";
@@ -17,8 +18,9 @@ export default function Login() {
 		}
 	};
 
-	return (<>
-		<label>
+	return (<div className={"login-container"}>
+		<h1 className={"login-title"}>Log in</h1>
+		<label className={"login-input"}>
 			Username:
 			<input
 				type="text"
@@ -28,7 +30,7 @@ export default function Login() {
 				required
 			/>
 		</label>
-		<label>
+		<label className={"login-input"}>
 			Password:
 			<input
 				type="password"
@@ -38,6 +40,6 @@ export default function Login() {
 				required
 			/>
 		</label>
-		<button onClick={handleSubmit}>Login</button>
-	</>);
+		<button onClick={handleSubmit} className={"login-submit"}>Login</button>
+	</div>);
 }
