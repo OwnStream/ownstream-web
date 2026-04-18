@@ -4,7 +4,7 @@ import {useAuth} from "../auth/AuthContext.tsx";
 import Profile from "../components/Profile.tsx";
 
 export default function Profiles() {
-	const {accounts, switchAccount, removeAccount} = useAuth();
+	const {accounts, switchAccount, removeAccount, user} = useAuth();
 	const navigate = useNavigate();
 
 	const doSwitch = async (id: string) => {
@@ -31,6 +31,7 @@ export default function Profiles() {
 			<div className={"profile-list"}>
 				{accounts.map((account) => (<Profile
 					key={account.user.id}
+					selected={user?.id == account.user.id}
 					user={account.user}
 					select={doSwitch}
 					remove={doRemove}

@@ -4,15 +4,16 @@ import {Trash, User as UserIcon} from "react-feather";
 
 type ProfileProps = {
 	user: User;
+	selected: boolean
 	select: (id: string) => void;
 	remove: (id: string) => void;
 };
 
-export default function Profile({user, select, remove}: ProfileProps) {
+export default function Profile({user, selected, select, remove}: ProfileProps) {
 	return (
 		<div onClick={() => {
 			select(user.id)
-		}} className={"profile"}>
+		}} className={`profile ${selected && "active"}`}>
 			<div className={"profile-image"}>
 				<UserIcon/>
 			</div>
