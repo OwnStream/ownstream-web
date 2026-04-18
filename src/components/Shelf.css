@@ -1,0 +1,32 @@
+.shelf {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.shelf-header {
+	display: flex;
+	flex-direction: row;
+	gap: 16px;
+	padding-left: 32px;
+}
+
+.shelf-header-text {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.shelf-header-title {
+	font-size: 1.75em;
+	font-weight: bold;
+}
+
+.shelf-items {
+	display: flex;
+	flex-direction: row;
+	gap: 8px;
+	overflow-x: scroll;
+	overflow-y: visible;
+	padding: 0 32px 16px;
+}

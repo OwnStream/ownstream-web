@@ -1,9 +1,11 @@
+import "./Home.css";
 import {client} from "../api/api.ts";
 import {useEffect, useState} from "react";
-import type {Shelf} from "../api/types.ts";
+import type {Shelf as ApiShelf} from "../api/types.ts";
+import Shelf from "../components/Shelf";
 
 export default function Home() {
-	const [shelves, setShelves] = useState<Shelf[]>([]);
+	const [shelves, setShelves] = useState<ApiShelf[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
@@ -28,16 +30,11 @@ export default function Home() {
 	if (error) return <div>{error}</div>;
 
 	return (
-		<div>
+		<div className={"shelves-container"}>
 			{shelves.map((shelf) => (
-				<div key={shelf.type + "-" + shelf.title}>
-					<b>{shelf.title}</b>
-					<div>
-						{shelf.items.map((item) => (
-							<div key={item.id}>{item.title}</div>
-						))}
-					</div>
-				</div>
+				<>
+					<Shelf shelf={shelf}/>
+				</>
 			))}
 		</div>
 	);
