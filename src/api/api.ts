@@ -38,7 +38,7 @@ class OwnStreamApiClient {
 		}
 	}
 
-	setToken(token: string) {
+	setToken(token: string | null) {
 		this.token = token;
 	}
 
@@ -109,3 +109,4 @@ class OwnStreamApiClient {
 }
 
 export {OwnStreamApiClient};
+export const client = new OwnStreamApiClient("http://localhost:5165");
