@@ -1,11 +1,8 @@
 import {client} from "../api/api.ts";
 import {useEffect, useState} from "react";
 import type {Shelf} from "../api/types.ts";
-import {NavLink} from "react-router-dom";
-import {useAuth} from "../auth/AuthContext.tsx";
 
 export default function Home() {
-	const { user } = useAuth();
 	const [shelves, setShelves] = useState<Shelf[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
@@ -32,8 +29,6 @@ export default function Home() {
 
 	return (
 		<div>
-			<div>Currently logged in as <b>{user!.username}</b></div>
-			<NavLink to={"/profiles"}>Profiles</NavLink>
 			{shelves.map((shelf) => (
 				<div key={shelf.type + "-" + shelf.title}>
 					<b>{shelf.title}</b>

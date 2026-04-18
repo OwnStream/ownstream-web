@@ -1,10 +1,12 @@
 import "./App.css";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
-import {AuthProvider, useAuth} from "./auth/AuthContext.tsx";
+import {AuthProvider, useAuth} from "./auth/AuthContext";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import SplashScreen from "./pages/SplashScreen.tsx";
-import Profiles from "./pages/Profiles.tsx";
+import SplashScreen from "./pages/SplashScreen";
+import Profiles from "./pages/Profiles";
+import Shell from "./layouts/Shell";
+import type {ReactNode} from "react";
 
 export default function App() {
 	return (
@@ -25,26 +27,28 @@ function AppRoutes() {
 
 	return (
 		<Routes>
+			<Route path="/login" element={<Login/>}/>
+			<Route path="/splash" element={<SplashScreen/>}/>
+			<Route path="/profiles" element={<Profiles/>}/>
+
 			<Route
-				path="/"
 				element={
 					<ProtectedRoute>
-						<Home/>
+						<Shell/>
 					</ProtectedRoute>
 				}
-			/>
-			<Route path="/splash" element={<SplashScreen/>}/>
-			<Route path="/login" element={<Login/>}/>
-			<Route path="/profiles" element={<Profiles/>}/>
+			>
+				<Route path="/" element={<Home/>}/>
+			</Route>
 		</Routes>
 	);
 }
 
-function ProtectedRoute({children}: { children: React.ReactNode }) {
+function ProtectedRoute({children}: { children: ReactNode }) {
 	const {status} = useAuth();
 
 	if (status === "loading") return <SplashScreen/>;
-	if (status === "loggedOut") return <Navigate to="/profiles" replace/>;
+	if (status === "loggedOut") return <Navigate to="/login" replace/>;
 
 	return <>{children}</>;
 }
