@@ -7,6 +7,7 @@ import SplashScreen from "./pages/SplashScreen";
 import Profiles from "./pages/Profiles";
 import Shell from "./layouts/Shell";
 import type {ReactNode} from "react";
+import Settings from "./pages/Settings.tsx";
 
 export default function App() {
 	return (
@@ -39,6 +40,7 @@ function AppRoutes() {
 				}
 			>
 				<Route path="/" element={<Home/>}/>
+				<Route path="/serverSettings" element={<Settings/>}/>
 			</Route>
 		</Routes>
 	);

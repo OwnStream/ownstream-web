@@ -11,11 +11,12 @@ import type {
 	Video,
 	WatchProgress
 } from './types';
+import type {Configuration} from "./configTypes.ts";
 
 // noinspection JSUnusedGlobalSymbols
 class OwnStreamApiClient {
 	baseUrl: string;
-	private token: string | null;
+	token: string | null;
 
 	constructor(baseUrl: string) {
 		this.baseUrl = baseUrl.replace(/\/+$/, '');
@@ -105,6 +106,18 @@ class OwnStreamApiClient {
 
 	async upNext(id: string): Promise<EpisodeToWatch> {
 		return await this.request<EpisodeToWatch>(`api/progress/${id}/upNext`);
+	}
+
+	async getConfig(): Promise<Configuration> {
+		return await this.request<Configuration>(`api/settings/get`);
+	}
+
+	async updateConfig(config: Configuration): Promise<Configuration> {
+		return await this.request<Configuration>(`api/settings/update`, config);
+	}
+
+	async benchmark(): Promise<void> {
+		return await this.request<void>(`api/settings/benchmark`);
 	}
 }
 

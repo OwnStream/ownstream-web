@@ -5,7 +5,7 @@ import {useAuth} from "../auth/AuthContext.tsx";
 import UserIndicator from "../components/UserIndicator.tsx";
 
 export default function Shell() {
-	const { user } = useAuth();
+	const {user} = useAuth();
 	const navigate = useNavigate();
 
 	return (
@@ -15,11 +15,13 @@ export default function Shell() {
 				<span>&bull;</span>
 				<NavLink to={"/"} className={"app-root__header__link"}>Home</NavLink>
 				<NavLink to={"/library"} className={"app-root__header__link"}>Library</NavLink>
+				{user?.permissions.includes("Admin") &&
+					<NavLink to={"/serverSettings"} className={"app-root__header__link"}>Settings</NavLink>}
 				<FlexDivider/>
-				<UserIndicator user={user} onClick={() => {navigate("/profiles")}}/>
+				<UserIndicator user={user} onClick={() => navigate("/profiles")}/>
 			</header>
 			<main className={"app-root__main"}>
-				<Outlet />
+				<Outlet/>
 			</main>
 		</div>
 	);
