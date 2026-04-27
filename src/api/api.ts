@@ -139,6 +139,13 @@ class OwnStreamApiClient {
 	async deleteUser(id: string) {
 		return await this.request<void>(`api/manage/users/${id}`, undefined, "DELETE");
 	}
+
+	getMediaUrl(id: string, dir?: string, file: string = "master.m3u8"): string {
+		if (dir)
+			return `${this.baseUrl}/Media/${id}/${dir}/${file}`;
+		else
+			return `${this.baseUrl}/Media/${id}/${file}`;
+	}
 }
 
 export {OwnStreamApiClient};

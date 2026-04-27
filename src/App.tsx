@@ -13,6 +13,7 @@ import TranscodingSettings from "./pages/settings/Transcoding.tsx";
 import UsersSettings from "./pages/settings/Users.tsx";
 import CreateUser from "./pages/settings/NewUser.tsx";
 import EditUser from "./pages/settings/EditUser.tsx";
+import WatchScreen from "./pages/WatchScreen.tsx";
 
 export default function App() {
 	return (
@@ -45,6 +46,7 @@ function AppRoutes() {
 				}
 			>
 				<Route path="/" element={<Home/>}/>
+				<Route path="/watch/:videoId" element={<WatchScreen/>}/>
 				<Route path="/serverSettings" element={<Settings/>}>
 					<Route path="transcode" element={<TranscodingSettings/>}/>
 					<Route path="benchmark" element={<BenchmarkTab/>}/>
