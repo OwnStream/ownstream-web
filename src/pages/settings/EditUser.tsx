@@ -24,7 +24,7 @@ export default function EditUser() {
 				setLoading(true);
 				setUser(await client.getUser(params.id!));
 			} catch (err) {
-				setError("Failed to load shelves: " + err);
+				setError("Failed to load user info: " + err);
 			} finally {
 				setLoading(false);
 			}

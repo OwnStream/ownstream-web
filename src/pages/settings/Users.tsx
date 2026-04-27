@@ -18,7 +18,7 @@ export default function UsersSettings() {
 				setLoading(true);
 				setUsers(await client.getUsers());
 			} catch (err) {
-				setError("Failed to load shelves: " + err);
+				setError("Failed to load users: " + err);
 			} finally {
 				setLoading(false);
 			}

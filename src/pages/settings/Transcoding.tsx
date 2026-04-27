@@ -112,7 +112,7 @@ export default function TranscodingSettings() {
 				setLoading(true);
 				setConfig(await client.getConfig());
 			} catch (err) {
-				setError("Failed to load shelves: " + err);
+				setError("Failed to load configuration: " + err);
 			} finally {
 				setLoading(false);
 			}
