@@ -8,6 +8,8 @@ import Profiles from "./pages/Profiles";
 import Shell from "./layouts/Shell";
 import type {ReactNode} from "react";
 import Settings from "./pages/Settings.tsx";
+import BenchmarkTab from "./pages/settings/Benchmark.tsx";
+import TranscodingSettings from "./pages/settings/Transcoding.tsx";
 
 export default function App() {
 	return (
@@ -40,7 +42,10 @@ function AppRoutes() {
 				}
 			>
 				<Route path="/" element={<Home/>}/>
-				<Route path="/serverSettings" element={<Settings/>}/>
+				<Route path="/serverSettings" element={<Settings/>}>
+					<Route path="transcode" element={<TranscodingSettings/>}/>
+					<Route path="benchmark" element={<BenchmarkTab/>}/>
+				</Route>
 			</Route>
 		</Routes>
 	);

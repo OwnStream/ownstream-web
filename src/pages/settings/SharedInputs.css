@@ -1,0 +1,87 @@
+.settingsInput {
+	width: 100%;
+	display: flex;
+	align-items: center;
+}
+
+.settingsInput-text {
+	flex-grow: 1;
+}
+
+.settingsInput-icon {
+	width: 24px;
+	height: 24px;
+	margin-right: 8px;
+}
+
+.settingsInput-string {
+	flex-shrink: 0;
+	padding: 8px;
+	font-size: 14px;
+	border-radius: 4px;
+	border: 1px solid #666;
+	background-color: #222;
+	color: #fff;
+	width: 200px;
+}
+
+.settingsInput-number {
+	flex-shrink: 0;
+	padding: 8px;
+	font-size: 14px;
+	border-radius: 4px;
+	border: 1px solid #666;
+	background-color: #222;
+	color: #fff;
+	width: 200px;
+}
+
+.settingsInput-select {
+	flex-shrink: 0;
+	padding: 8px;
+	font-size: 14px;
+	border-radius: 4px;
+	border: 1px solid #666;
+	background-color: #222;
+	color: #fff;
+	min-width: 200px;
+}
+
+.settingsInput-button {
+	color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 16px;
+	font-size: 1.2em;
+	border: none;
+	border-radius: 4px;
+	width: 100%;
+	padding: 6px 16px;
+	cursor: pointer;
+	transition: background-color 0.1s ease;
+}
+
+.settingsInput-save {
+	background-color: #55f;
+}
+
+.settingsInput-save:hover {
+	background-color: #77f;
+}
+
+.settingsInput-save:active {
+	background-color: #33f;
+}
+
+.settingsInput-delete {
+	background-color: #f55;
+}
+
+.settingsInput-delete:hover {
+	background-color: #f77;
+}
+
+.settingsInput-delete:active {
+	background-color: #f33;
+}

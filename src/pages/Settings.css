@@ -21,6 +21,9 @@
 	cursor: pointer;
 	transition: background-color 0.1s ease;
 	overflow-y: scroll;
+
+	text-decoration: none;
+	color: #fff;
 }
 
 .settingsCategory:hover, .settingsCategory:focus {
@@ -40,152 +43,6 @@
 	display: flex;
 	flex-direction: column;
 	gap: 4px;
-}
-
-.settingsInput {
-	width: 100%;
-	display: flex;
-	align-items: center;
-}
-
-.settingsInput-text {
-	flex-grow: 1;
-}
-
-.settingsInput-icon {
-	width: 24px;
-	height: 24px;
-	margin-right: 8px;
-}
-
-.settingsInput-string {
-	flex-shrink: 0;
-	padding: 8px;
-	font-size: 14px;
-	border-radius: 4px;
-	border: 1px solid #666;
-	background-color: #222;
-	color: #fff;
-	width: 200px;
-}
-
-.settingsInput-number {
-	flex-shrink: 0;
-	padding: 8px;
-	font-size: 14px;
-	border-radius: 4px;
-	border: 1px solid #666;
-	background-color: #222;
-	color: #fff;
-	width: 200px;
-}
-
-.settingsInput-select {
-	flex-shrink: 0;
-	padding: 8px;
-	font-size: 14px;
-	border-radius: 4px;
-	border: 1px solid #666;
-	background-color: #222;
-	color: #fff;
-	min-width: 200px;
-}
-
-.settingsInput-save {
-	width: 100%;
-	background-color: #55f;
-	color: #fff;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 16px;
-	font-size: 1.2em;
-	border: none;
-	border-radius: 4px;
-	padding: 6px 16px;
-	cursor: pointer;
-	transition: background-color 0.1s ease;
-}
-
-.settingsInput-save:hover {
-	background-color: #77f;
-}
-
-.settingsInput-save:active {
-	background-color: #33f;
-}
-
-.settingsInput-delete {
-	width: 100%;
-	background-color: #f55;
-	color: #fff;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 16px;
-	font-size: 1.2em;
-	border: none;
-	border-radius: 4px;
-	padding: 6px 16px;
-	cursor: pointer;
-	transition: background-color 0.1s ease;
-}
-
-.settingsInput-delete:hover {
-	background-color: #f77;
-}
-
-.settingsInput-delete:active {
-	background-color: #f33;
-}
-
-.encoderBenchmark {
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
-}
-
-.encoderBenchmarkItem {
-	display: flex;
-	flex-direction: row;
-	gap: 16px;
-	background-color: #fff3;
-	padding: 16px 16px;
-	align-items: center;
-}
-
-.encoderBenchmarkItem-icon {
-	width: 24px;
-	height: 24px;
-}
-
-.encoderBenchmarkItem-info {
-	display: flex;
-	flex-direction: column;
-}
-
-.encoderBenchmarkItem-label {
-	font-weight: bold;
-}
-
-.encoderBenchmarkItem-stats {
-	font-size: .9rem;
-}
-
-.encoderBenchmarkItem-icon_failed {
-	color: #ff4444;
-}
-
-.encoderBenchmarkItem-icon_complete {
-	color: #44ff44;
-}
-
-.encoderBenchmarkItem-icon_running {
-	color: #ffff44;
-}
-
-.encoderBenchmarkItem-icon_waiting {
-	color: #000000;
 }
 
 .settingsInput-info {

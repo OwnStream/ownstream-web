@@ -1,0 +1,48 @@
+.encoderBenchmark {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.encoderBenchmarkItem {
+	display: flex;
+	flex-direction: row;
+	gap: 16px;
+	background-color: #fff3;
+	padding: 16px 16px;
+	align-items: center;
+}
+
+.encoderBenchmarkItem-icon {
+	width: 24px;
+	height: 24px;
+}
+
+.encoderBenchmarkItem-info {
+	display: flex;
+	flex-direction: column;
+}
+
+.encoderBenchmarkItem-label {
+	font-weight: bold;
+}
+
+.encoderBenchmarkItem-stats {
+	font-size: .9rem;
+}
+
+.encoderBenchmarkItem-icon_failed {
+	color: #ff4444;
+}
+
+.encoderBenchmarkItem-icon_complete {
+	color: #44ff44;
+}
+
+.encoderBenchmarkItem-icon_running {
+	color: #ffff44;
+}
+
+.encoderBenchmarkItem-icon_waiting {
+	color: #000000;
+}
