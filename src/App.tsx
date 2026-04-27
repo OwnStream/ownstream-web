@@ -10,6 +10,9 @@ import type {ReactNode} from "react";
 import Settings from "./pages/Settings.tsx";
 import BenchmarkTab from "./pages/settings/Benchmark.tsx";
 import TranscodingSettings from "./pages/settings/Transcoding.tsx";
+import UsersSettings from "./pages/settings/Users.tsx";
+import CreateUser from "./pages/settings/NewUser.tsx";
+import EditUser from "./pages/settings/EditUser.tsx";
 
 export default function App() {
 	return (
@@ -45,6 +48,9 @@ function AppRoutes() {
 				<Route path="/serverSettings" element={<Settings/>}>
 					<Route path="transcode" element={<TranscodingSettings/>}/>
 					<Route path="benchmark" element={<BenchmarkTab/>}/>
+					<Route path="users" element={<UsersSettings/>}/>
+					<Route path="users/new" element={<CreateUser/>}/>
+					<Route path="users/:id" element={<EditUser/>}/>
 				</Route>
 			</Route>
 		</Routes>

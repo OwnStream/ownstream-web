@@ -15,7 +15,7 @@ export default function Shell() {
 				<span>&bull;</span>
 				<NavLink to={"/"} className={"app-root__header__link"}>Home</NavLink>
 				<NavLink to={"/library"} className={"app-root__header__link"}>Library</NavLink>
-				{user?.permissions.includes("Admin") &&
+				{(user?.permissions.includes("Admin") || user?.permissions.includes("Owner")) &&
 					<NavLink to={"/serverSettings"} className={"app-root__header__link"}>Settings</NavLink>}
 				<FlexDivider/>
 				<UserIndicator user={user} onClick={() => navigate("/profiles")}/>

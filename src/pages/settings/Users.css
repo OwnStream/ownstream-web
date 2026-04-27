@@ -1,0 +1,40 @@
+.userList {
+	display: flex;
+	flex-direction: column;
+	margin-top: 8px;
+}
+
+.userRow {
+	display: flex;
+	align-items: center;
+
+	gap: 16px;
+	padding: 16px;
+
+	text-decoration: none;
+	color: unset;
+	background-color: #222;
+	transition: background-color 0.1s ease-in-out;
+}
+
+.userRow:hover {
+	background-color: #333;
+}
+
+.userRow:active {
+	background-color: #151515;
+}
+
+.userRow-info {
+	display: flex;
+	flex-direction: column;
+}
+
+.userRow-name {
+
+}
+
+.userRow-permissions {
+	margin-top: 4px;
+	font-size: .8rem;
+}

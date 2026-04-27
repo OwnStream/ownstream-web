@@ -23,13 +23,13 @@ class OwnStreamApiClient {
 		this.token = null;
 	}
 
-	private async request<T>(url: string, body: object | undefined = undefined): Promise<T> {
+	private async request<T>(url: string, body?: object, method?: string): Promise<T> {
 		const headers: Record<string, string> = {};
 		if (this.token) headers["Authorization"] = "Bearer " + this.token;
 		if (body) headers["Content-Type"] = "application/json";
 		const response = await fetch(`${this.baseUrl}/${url}`, {
 			headers,
-			method: body ? "POST" : "GET",
+			method: method ? method : body ? "POST" : "GET",
 			body: body ? JSON.stringify(body) : undefined,
 		});
 		if (response.status === 200) {
@@ -118,6 +118,26 @@ class OwnStreamApiClient {
 
 	async benchmark(): Promise<void> {
 		return await this.request<void>(`api/settings/benchmark`);
+	}
+
+	async getUsers(): Promise<User[]> {
+		return await this.request<User[]>(`api/manage/users/list`);
+	}
+
+	async createUser(username: string, password: string): Promise<User> {
+		return await this.request<User>(`api/manage/users/new`, {username, password});
+	}
+
+	async getUser(id: string): Promise<User> {
+		return await this.request<User>(`api/manage/users/${id}`);
+	}
+
+	async modifyUser(id: string, username: string, password?: string, permissions?: string[]) {
+		return await this.request<User>(`api/manage/users/${id}`, {username, password, permissions});
+	}
+
+	async deleteUser(id: string) {
+		return await this.request<void>(`api/manage/users/${id}`, undefined, "DELETE");
 	}
 }
 

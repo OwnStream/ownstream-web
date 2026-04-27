@@ -1,0 +1,14 @@
+.back-button {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	color: #aaa;
+	text-decoration: none;
+	cursor: pointer;
+	font-size: 1.3rem;
+	transition: color 0.1s ease;
+}
+
+.back-button:hover {
+	color: #ccc;
+}

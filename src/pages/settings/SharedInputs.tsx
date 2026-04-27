@@ -13,9 +13,10 @@ interface StringInputProps {
 	label: string;
 	min?: number;
 	max?: number;
+	type?: string;
 }
 
-export function StringInput({icon, value, onChange, label, min, max}: StringInputProps) {
+export function StringInput({icon, value, onChange, label, min, max, type}: StringInputProps) {
 	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		onChange(e.target.value);
 	};
@@ -31,7 +32,7 @@ export function StringInput({icon, value, onChange, label, min, max}: StringInpu
 				{label}
 			</label>
 			<input
-				type="text"
+				type={type || "text"}
 				value={value}
 				onChange={handleInputChange}
 				min={min}
@@ -109,6 +110,34 @@ export function EnumInput({icon, value, values, onChange, label}: EnumInputProps
 					<option key={key} value={key} selected={value === key}>{label}</option>
 				))}
 			</select>
+		</div>
+	);
+}
+
+interface CheckboxInputProps {
+	icon?: ReactElement;
+	checked: boolean;
+	onChange: (value: boolean) => void;
+	label: string;
+	disabled?: boolean;
+}
+
+export function CheckboxInput({icon, checked, label, onChange, disabled}: CheckboxInputProps) {
+	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+		onChange(e.target.checked);
+	};
+
+	return (
+		<div className={"settingsInput"}>
+			{icon && (
+				<span className="settingsInput-icon">
+					{icon}
+				</span>
+			)}
+			<label className={"settingsInput-text"}>
+				{label}
+			</label>
+			<input onChange={handleInputChange} className={"settingsInput-select"} type={"checkbox"} checked={checked} disabled={disabled}/>
 		</div>
 	);
 }
