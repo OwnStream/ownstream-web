@@ -1,9 +1,9 @@
 import {StringInput} from "./SharedInputs.tsx";
 import {useState} from "react";
 import BackButton from "../../components/BackButton.tsx";
-import {UserPlus} from "react-feather";
 import {client} from "../../api/api.ts";
 import {useNavigate} from "react-router-dom";
+import {UserPlusIcon} from "lucide-react";
 
 export default function CreateUser() {
 	const [username, setUsername] = useState('');
@@ -19,7 +19,7 @@ export default function CreateUser() {
 			const newUser = await client.createUser(username, password);
 			navigate(`/serverSettings/users/${newUser.id}`);
 		}} className={"settingsInput-button settingsInput-save"}>
-			<UserPlus/>
+			<UserPlusIcon/>
 			<span>Create User</span>
 		</button>
 	</>);

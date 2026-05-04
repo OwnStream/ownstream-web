@@ -21,3 +21,16 @@ body {
 .flex-divider {
 	flex-grow: 1;
 }
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.lucide-loader {
+	animation: spin 2s linear infinite;
+}

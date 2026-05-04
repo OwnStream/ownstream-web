@@ -1,11 +1,11 @@
 import "./BackButton.css"
 import {NavLink, type To} from "react-router-dom";
-import {ChevronLeft} from "react-feather";
+import {ChevronLeftIcon} from "lucide-react";
 
 export default function BackButton(props: { to: To }) {
 	return (
 		<NavLink to={props.to} className={"back-button"}>
-			<ChevronLeft/> Back
+			<ChevronLeftIcon/> Back
 		</NavLink>
 	);
 }

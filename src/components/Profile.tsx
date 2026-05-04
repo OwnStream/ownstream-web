@@ -1,6 +1,6 @@
 import "./Profile.css";
 import type {User} from "../api/types.ts";
-import {Trash, User as UserIcon} from "react-feather";
+import {Trash2Icon, UserIcon} from "lucide-react";
 
 type ProfileProps = {
 	user: User;
@@ -22,7 +22,7 @@ export default function Profile({user, selected, select, remove}: ProfileProps) 
 				event.stopPropagation();
 				remove(user.id);
 			}}>
-				<Trash/>
+				<Trash2Icon/>
 			</button>
 		</div>
 	)

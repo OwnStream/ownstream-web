@@ -1,10 +1,10 @@
 import {CheckboxInput, DeleteButton, StringInput} from "./SharedInputs.tsx";
 import {useEffect, useState} from "react";
 import BackButton from "../../components/BackButton.tsx";
-import {Save} from "react-feather";
 import {client} from "../../api/api.ts";
 import {useNavigate, useParams} from "react-router-dom";
 import type {User} from "../../api/types.ts";
+import {SaveIcon} from "lucide-react";
 
 export default function EditUser() {
 	const [user, setUser] = useState<User | null>(null);
@@ -152,7 +152,7 @@ export default function EditUser() {
 		<button onClick={async () => {
 			setUser(await client.modifyUser(params.id!, user.username, password.length > 0 ? password : undefined, user.permissions));
 		}} className={"settingsInput-button settingsInput-save"}>
-			<Save/>
+			<SaveIcon/>
 			<span>Save User</span>
 		</button>
 

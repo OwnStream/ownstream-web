@@ -1,31 +1,23 @@
 import "./WatchScreen.css";
-import {
-	ChevronLeft,
-	Headphones,
-	Maximize, Minimize,
-	Pause,
-	Play,
-	Settings,
-	Type,
-	Volume,
-	Volume1,
-	Volume2,
-	VolumeX
-} from "react-feather";
-import {type JSX, type UIEventHandler, useEffect, useRef, useState} from "react";
+import {type JSX, useEffect, useRef, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import type {Video} from "../api/types.ts";
 import {client} from "../api/api.ts";
 import Hls from "hls.js";
-
-/*
-import {useParams} from "react-router-dom";
-import {useEffect, useRef, useState} from "react";
-import type {Video} from "../api/types.ts";
-import {client} from "../api/api.ts";
-import Hls from "hls.js";
-*/
-
+import {
+	BoltIcon,
+	CaptionsIcon,
+	ChevronLeftIcon,
+	MaximizeIcon,
+	MinimizeIcon,
+	PauseIcon,
+	PlayIcon,
+	SpeechIcon,
+	Volume1Icon,
+	Volume2Icon,
+	VolumeIcon,
+	VolumeXIcon
+} from "lucide-react";
 
 function PlayerButton(props: { icon: JSX.Element, tooltip: string, onclick: () => void }) {
 	return (<div className={"videoPlayer-button"} title={props.tooltip} onClick={props.onclick}>
@@ -164,7 +156,7 @@ export default function WatchScreen() {
 			<canvas/>
 		</div>
 		<div className={"videoPlayer-info"}>
-			<PlayerButton icon={<ChevronLeft/>} tooltip={"Go Back"} onclick={() => {
+			<PlayerButton icon={<ChevronLeftIcon/>} tooltip={"Go Back"} onclick={() => {
 				navigate(-1);
 			}}/>
 			{loading
@@ -185,26 +177,27 @@ export default function WatchScreen() {
 					</div>)}
 		</div>
 		<div className={"videoPlayer-controls"}>
-			<PlayerButton icon={playing ? <Pause/> : <Play/>}
+			<PlayerButton icon={playing ? <PauseIcon/> : <PlayIcon/>}
 			              tooltip={playing ? "Pause" : "Play"}
 			              onclick={togglePlay}/>
 			<PlayerButton
-				icon={volume > .7 ? <Volume2/> : volume > .2 ? <Volume1/> : volume > 0 ? <Volume/> : <VolumeX/>}
+				icon={volume > .7 ? <Volume2Icon/> : volume > .2 ? <Volume1Icon/> : volume > 0 ? <VolumeIcon/> :
+					<VolumeXIcon/>}
 				tooltip={"Mute"} onclick={toggleMuted}/>
 			<div className={"videoPlayer-currentTime"}>{toHhMmSs(time)}</div>
 			<span>/</span>
 			<div className={"videoPlayer-duration"}>{toHhMmSs(duration)}</div>
 			<div className={"flex-divider"}/>
-			<PlayerButton icon={<Type/>} tooltip={"Subtitles"} onclick={() => {
+			<PlayerButton icon={<CaptionsIcon/>} tooltip={"Subtitles"} onclick={() => {
 
 			}}/>
-			<PlayerButton icon={<Headphones/>} tooltip={"Audio Track"} onclick={() => {
+			<PlayerButton icon={<SpeechIcon/>} tooltip={"Audio Track"} onclick={() => {
 
 			}}/>
-			<PlayerButton icon={<Settings/>} tooltip={"Settings"} onclick={() => {
+			<PlayerButton icon={<BoltIcon/>} tooltip={"Settings"} onclick={() => {
 
 			}}/>
-			<PlayerButton icon={isFullscreen ? <Minimize/> : <Maximize/>}
+			<PlayerButton icon={isFullscreen ? <MinimizeIcon/> : <MaximizeIcon/>}
 			              tooltip={isFullscreen ? "Exit Full Screen" : "Full Screen"} onclick={toggleFullscreen}/>
 		</div>
 	</div>)

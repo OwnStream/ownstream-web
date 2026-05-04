@@ -1,10 +1,6 @@
 import "./SharedInputs.css"
-import {
-	Plus,
-	Save,
-	Trash2,
-} from "react-feather";
 import type {ChangeEvent, ReactElement} from "react";
+import {PlusIcon, SaveIcon, Trash2Icon} from "lucide-react";
 
 interface StringInputProps {
 	icon?: ReactElement;
@@ -149,7 +145,7 @@ interface ButtonProps {
 export function SaveButton({onClick}: ButtonProps) {
 	return (
 		<button onClick={onClick} className={"settingsInput-button settingsInput-save"}>
-			<Save/>
+			<SaveIcon/>
 			<span>Save changes</span>
 		</button>
 	)
@@ -158,7 +154,7 @@ export function SaveButton({onClick}: ButtonProps) {
 export function DeleteButton({onClick}: ButtonProps) {
 	return (
 		<button onClick={onClick} className={"settingsInput-button settingsInput-delete"}>
-			<Trash2/>
+			<Trash2Icon/>
 			<span>Delete</span>
 		</button>
 	)
@@ -167,7 +163,7 @@ export function DeleteButton({onClick}: ButtonProps) {
 export function AddButton({onClick}: ButtonProps) {
 	return (
 		<button onClick={onClick} className={"settingsInput-button settingsInput-save"}>
-			<Plus/>
+			<PlusIcon/>
 			<span>Add</span>
 		</button>
 	)

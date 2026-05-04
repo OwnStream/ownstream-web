@@ -3,8 +3,8 @@ import {useEffect, useState} from "react";
 import {client} from "../../api/api.ts";
 import type {User} from "../../api/types.ts";
 import {NavLink, useNavigate} from "react-router-dom";
-import {User as UserIcon} from "react-feather";
 import {AddButton} from "./SharedInputs.tsx";
+import {UserIcon} from "lucide-react";
 
 export default function UsersSettings() {
 	const [users, setUsers] = useState<User[]>([]);

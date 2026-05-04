@@ -1,6 +1,6 @@
 import "./UserIndicator.css";
 import type {User} from "../api/types.ts";
-import {User as UserIcon} from "react-feather";
+import {UserIcon} from "lucide-react";
 
 type UserIndicatorProps = {
 	user: User | null;

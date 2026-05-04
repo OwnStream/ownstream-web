@@ -1,8 +1,8 @@
-import {Film, Image} from "react-feather";
 import {useEffect, useState} from "react";
 import type {AudioPreset, Configuration, VideoPreset} from "../../api/configTypes.ts";
 import {client} from "../../api/api.ts";
 import {AddButton, DeleteButton, EnumInput, NumberInput, SaveButton, StringInput} from "./SharedInputs.tsx";
+import {FileVideoCameraIcon, PaletteIcon} from "lucide-react";
 
 function VideoPreset(props: { preset: VideoPreset; onChange: (preset: VideoPreset) => void; onDelete: () => void }) {
 	const preset = props.preset;
@@ -133,7 +133,7 @@ export default function TranscodingSettings() {
 	return (<>
 		<h2>Transcoding</h2>
 		<NumberInput
-			icon={<Film/>}
+			icon={<FileVideoCameraIcon/>}
 			value={config.transcode.maxVideoStreams}
 			onChange={value => {
 				setConfig({
@@ -147,7 +147,7 @@ export default function TranscodingSettings() {
 			To save on storage space, only encode the best {config.transcode.maxVideoStreams} video streams.
 		</p>
 		<EnumInput
-			icon={<Image/>}
+			icon={<PaletteIcon/>}
 			value={config.transcode.pixelFormatHandling.toString()}
 			onChange={value => setConfig({
 				...config,

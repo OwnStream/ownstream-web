@@ -1,13 +1,13 @@
 import "./Benchmark.css";
 import {useEffect, useState} from "react";
 import {client} from "../../api/api.ts";
-import {Check, Clock, Play, PlayCircle, Slash, StopCircle} from "react-feather";
+import {BanIcon, CheckIcon, FlameIcon, HourglassIcon, LoaderIcon, StopCircleIcon} from "lucide-react";
 
 
 function StartBenchmarkButton({onClick}: {onClick: () => void}) {
 	return (
 		<button onClick={onClick} className={"settingsInput-button settingsInput-save"}>
-			<Play/>
+			<FlameIcon/>
 			<span>Start Benchmark</span>
 		</button>
 	)
@@ -16,7 +16,7 @@ function StartBenchmarkButton({onClick}: {onClick: () => void}) {
 function StopBenchmarkButton({onClick}: {onClick: () => void}) {
 	return (
 		<button onClick={onClick} className={"settingsInput-button settingsInput-delete"}>
-			<StopCircle/>
+			<StopCircleIcon/>
 			<span>Stop Benchmark</span>
 		</button>
 	)
@@ -28,23 +28,23 @@ function EncoderRow(props: {
 	state: "RUNNING" | "FAIL" | "COMPLETE" | "WAITING",
 	score?: number
 }) {
-	let icon = <Clock/>
+	let icon = <HourglassIcon/>
 	let className = "encoderBenchmarkItem-icon_waiting"
 	switch (props.state) {
 		case "RUNNING":
-			icon = <PlayCircle/>
+			icon = <LoaderIcon/>
 			className = "encoderBenchmarkItem-icon_running"
 			break;
 		case "FAIL":
-			icon = <Slash/>
+			icon = <BanIcon/>
 			className = "encoderBenchmarkItem-icon_failed"
 			break;
 		case "COMPLETE":
-			icon = <Check/>
+			icon = <CheckIcon/>
 			className = "encoderBenchmarkItem-icon_complete"
 			break;
 		case "WAITING":
-			icon = <Clock/>
+			icon = <HourglassIcon/>
 			className = "encoderBenchmarkItem-icon_waiting"
 			break;
 	}
