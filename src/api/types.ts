@@ -26,6 +26,11 @@ export type ContentImages = {
 	backdrop: string | null,
 	thumbnail: string | null,
 }
+export type DiskUsage = {
+	used: number,
+	available: number,
+	total: number
+}
 export type Episode = {
 	id: string,
 	seasonNumber: number,
@@ -63,6 +68,12 @@ export type Job = {
 	relevantContentId: string | null,
 	relevantLibraryId: string | null,
 	relevantWebhookId: string | null
+}
+export type Library = {
+	id: string,
+	name: string,
+	path: string,
+	diskUsage?: DiskUsage
 }
 export type LoginResponse = {
 	accessToken: string,
@@ -103,6 +114,11 @@ export type Shelf = {
 	description: string | null,
 	icon: string | null,
 	items: ShelfItem[]
+}
+export type SuccessResponse<T> = {
+	success: boolean,
+	message?: string,
+	data?: T
 }
 export type SubtitleFile = {
 	id: number,

@@ -14,6 +14,9 @@ import UsersSettings from "./pages/settings/Users.tsx";
 import CreateUser from "./pages/settings/NewUser.tsx";
 import EditUser from "./pages/settings/EditUser.tsx";
 import WatchScreen from "./pages/WatchScreen.tsx";
+import LibrariesSettings from "./pages/settings/Libraries.tsx";
+import CreateLibrary from "./pages/settings/NewLibrary.tsx";
+import EditLibrary from "./pages/settings/EditLibrary.tsx";
 
 export default function App() {
 	return (
@@ -53,6 +56,9 @@ function AppRoutes() {
 					<Route path="users" element={<UsersSettings/>}/>
 					<Route path="users/new" element={<CreateUser/>}/>
 					<Route path="users/:id" element={<EditUser/>}/>
+					<Route path="libraries" element={<LibrariesSettings/>}/>
+					<Route path="libraries/new" element={<CreateLibrary/>}/>
+					<Route path="libraries/:id" element={<EditLibrary/>}/>
 				</Route>
 			</Route>
 		</Routes>

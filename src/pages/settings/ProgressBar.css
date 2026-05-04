@@ -1,0 +1,16 @@
+.progressBar {
+	height: 12px;
+	border-radius: 6px;
+	background-color: #ccc;
+	overflow: hidden;
+	width: 100%;
+}
+
+.progressBar-bar {
+	height: 12px;
+	min-width: 12px;
+	max-width: 100%;
+	border-radius: 6px;
+	width: 0;
+	background-color: #44f;
+}

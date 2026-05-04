@@ -2,11 +2,11 @@ import type {
 	Content,
 	Episode,
 	EpisodeToWatch,
-	Job,
+	Job, Library,
 	LoginResponse,
 	PagedResponse,
 	Season,
-	Shelf,
+	Shelf, SuccessResponse,
 	User,
 	Video,
 	WatchProgress
@@ -138,6 +138,26 @@ class OwnStreamApiClient {
 
 	async deleteUser(id: string) {
 		return await this.request<void>(`api/manage/users/${id}`, undefined, "DELETE");
+	}
+
+	async getLibraries(): Promise<Library[]> {
+		return await this.request<Library[]>(`api/manage/libraries/list`);
+	}
+
+	async createLibrary(name: string, path: string): Promise<SuccessResponse<Library>> {
+		return await this.request<SuccessResponse<Library>>(`api/manage/libraries/new`, {name, path});
+	}
+
+	async getLibrary(id: string): Promise<Library> {
+		return await this.request<Library>(`api/manage/libraries/${id}`);
+	}
+
+	async modifyLibrary(id: string, name: string) {
+		return await this.request<Library>(`api/manage/libraries/${id}`, {name}, "PATCH");
+	}
+
+	async deleteLibrary(id: string, deleteMedia: boolean = false): Promise<SuccessResponse<void>> {
+		return await this.request<SuccessResponse<void>>(`api/manage/libraries/${id}?deleteMedia=${deleteMedia}`, undefined, "DELETE");
 	}
 
 	getMediaUrl(id: string, dir?: string, file: string = "master.m3u8"): string {
