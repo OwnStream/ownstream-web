@@ -20,7 +20,7 @@
 	padding: 12px;
 	cursor: pointer;
 	transition: background-color 0.1s ease;
-	overflow-y: scroll;
+	flex-shrink: 0;
 
 	text-decoration: none;
 	color: #fff;
@@ -58,4 +58,24 @@
 	display: flex;
 	flex-direction: column;
 	gap: 4px;
+}
+
+@media (max-width: 1000px) {
+	.settingsPage {
+		display: block;
+	}
+
+	.settingsCategories {
+		display: flex;
+		flex-direction: row;
+		height: 48px;
+		width: 100%;
+		overflow-x: scroll;
+		border-right: none;
+		border-bottom: 1px solid #666;
+	}
+
+	.settingsCategory {
+		width: unset;
+	}
 }
