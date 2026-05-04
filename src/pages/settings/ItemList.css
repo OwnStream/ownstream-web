@@ -1,10 +1,10 @@
-.userList {
+.itemList {
 	display: flex;
 	flex-direction: column;
 	margin-top: 8px;
 }
 
-.userRow {
+.itemRow {
 	display: flex;
 	align-items: center;
 
@@ -17,24 +17,24 @@
 	transition: background-color 0.1s ease-in-out;
 }
 
-.userRow:hover {
+.itemRow:hover {
 	background-color: #333;
 }
 
-.userRow:active {
+.itemRow:active {
 	background-color: #151515;
 }
 
-.userRow-info {
+.itemRow-info {
 	display: flex;
 	flex-direction: column;
 }
 
-.userRow-name {
+.itemRow-title {
 
 }
 
-.userRow-permissions {
+.itemRow-description {
 	margin-top: 4px;
 	font-size: .8rem;
 }

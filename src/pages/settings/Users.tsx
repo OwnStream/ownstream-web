@@ -1,4 +1,4 @@
-import "./Users.css"
+import "./ItemList.css"
 import {useEffect, useState} from "react";
 import {client} from "../../api/api.ts";
 import type {User} from "../../api/types.ts";
@@ -32,7 +32,7 @@ export default function UsersSettings() {
 	return (<div>
 		<h2>Users</h2>
 		<AddButton onClick={() => {navigation("new")}}/>
-		<div className={"userList"}>
+		<div className={"itemList"}>
 			{users.map(user => {
 				let permissions = user.permissions;
 				if (permissions.length == 0)
@@ -42,11 +42,11 @@ export default function UsersSettings() {
 				if (permissions.includes("Admin"))
 					permissions = ["Admin"];
 				return (
-					<NavLink key={user.id} to={user.id} className={"userRow"}>
+					<NavLink key={user.id} to={user.id} className={"itemRow"}>
 						<UserIcon/>
-						<div className={"userRow-info"}>
-							<span className={"userRow-name"}>{user.username}</span>
-							<span className={"userRow-permissions"}>{permissions.join(", ")}</span>
+						<div className={"itemRow-info"}>
+							<span className={"itemRow-title"}>{user.username}</span>
+							<span className={"itemRow-description"}>{permissions.join(", ")}</span>
 						</div>
 					</NavLink>
 				);
