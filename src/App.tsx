@@ -17,6 +17,9 @@ import WatchScreen from "./pages/WatchScreen.tsx";
 import LibrariesSettings from "./pages/settings/Libraries.tsx";
 import CreateLibrary from "./pages/settings/NewLibrary.tsx";
 import EditLibrary from "./pages/settings/EditLibrary.tsx";
+import WebhooksSettings from "./pages/settings/Webhooks.tsx";
+import CreateWebhook from "./pages/settings/NewWebhook.tsx";
+import EditWebhook from "./pages/settings/EditWebhook.tsx";
 
 export default function App() {
 	return (
@@ -59,6 +62,9 @@ function AppRoutes() {
 					<Route path="libraries" element={<LibrariesSettings/>}/>
 					<Route path="libraries/new" element={<CreateLibrary/>}/>
 					<Route path="libraries/:id" element={<EditLibrary/>}/>
+					<Route path="webhooks" element={<WebhooksSettings/>}/>
+					<Route path="webhooks/new" element={<CreateWebhook/>}/>
+					<Route path="webhooks/:id" element={<EditWebhook/>}/>
 				</Route>
 			</Route>
 		</Routes>

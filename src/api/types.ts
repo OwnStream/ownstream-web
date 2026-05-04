@@ -158,3 +158,9 @@ export type WatchProgress = {
 	duration: number,
 	wasMarkedAsWatched: boolean
 }
+export type Webhook = {
+	id: string,
+	libraryId: string,
+	name: string,
+	deleteOnConvert: boolean
+}

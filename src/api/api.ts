@@ -9,7 +9,7 @@ import type {
 	Shelf, SuccessResponse,
 	User,
 	Video,
-	WatchProgress
+	WatchProgress, Webhook
 } from './types';
 import type {Configuration} from "./configTypes.ts";
 
@@ -158,6 +158,36 @@ class OwnStreamApiClient {
 
 	async deleteLibrary(id: string, deleteMedia: boolean = false): Promise<SuccessResponse<void>> {
 		return await this.request<SuccessResponse<void>>(`api/manage/libraries/${id}?deleteMedia=${deleteMedia}`, undefined, "DELETE");
+	}
+
+	async getWebhooks(): Promise<Webhook[]> {
+		return await this.request<Webhook[]>(`api/manage/webhooks/list`);
+	}
+
+	async createWebhook(name: string, authentication: string, deleteOnConvert: boolean, libraryId: string): Promise<SuccessResponse<Webhook>> {
+		return await this.request<SuccessResponse<Webhook>>(`api/manage/webhooks/new`, {
+			name,
+			authentication,
+			deleteOnConvert,
+			libraryId
+		});
+	}
+
+	async getWebhook(id: string): Promise<Webhook> {
+		return await this.request<Webhook>(`api/manage/webhooks/${id}`);
+	}
+
+	async modifyWebhook(id: string, name?: string, authentication?: string, deleteOnConvert?: boolean, libraryId?: string): Promise<SuccessResponse<Webhook>> {
+		return await this.request<SuccessResponse<Webhook>>(`api/manage/webhooks/${id}`, {
+			name,
+			authentication,
+			deleteOnConvert,
+			libraryId
+		}, "PATCH");
+	}
+
+	async deleteWebhook(id: string): Promise<SuccessResponse<void>> {
+		return await this.request<SuccessResponse<void>>(`api/manage/webhooks/${id}`, undefined, "DELETE");
 	}
 
 	getMediaUrl(id: string, dir?: string, file: string = "master.m3u8"): string {

@@ -15,7 +15,7 @@ export default function EditLibrary() {
 	const params = useParams();
 
 	if (!params.id) {
-		navigate("/serverSettings/users");
+		navigate("/serverSettings/libraries");
 	}
 
 	useEffect(() => {
@@ -24,7 +24,7 @@ export default function EditLibrary() {
 				setLoading(true);
 				setLibrary(await client.getLibrary(params.id!));
 			} catch (err) {
-				setError("Failed to load user info: " + err);
+				setError("Failed to load library info: " + err);
 			} finally {
 				setLoading(false);
 			}

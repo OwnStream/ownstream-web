@@ -4,6 +4,12 @@
 	align-items: center;
 }
 
+.settingsInput[disabled],
+.settingsInput-button[disabled] {
+	opacity: 0.6;
+	pointer-events: none;
+}
+
 .settingsInput-text {
 	flex-grow: 1;
 }
