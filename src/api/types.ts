@@ -142,6 +142,7 @@ export type Video = {
 	language: string,
 	subtitles: SubtitleFile[] | null,
 	previews: PreviewFile[] | null,
+	content: Content | null,
 	episode: Episode | null,
 	segments: VideoSegment[] | null
 }

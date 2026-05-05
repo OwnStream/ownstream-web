@@ -1,4 +1,5 @@
 .videoPlayer {
+	overflow: hidden;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -78,8 +79,11 @@
 }
 
 .videoPlayer-button:active {
-	scale: 90%;
 	background-color: #3335;
+}
+
+.videoPlayer-button:not(.videoPlayer-menuButton):active {
+	scale: 90%;
 }
 
 .videoPlayer-button svg {
@@ -89,4 +93,72 @@
 
 .videoPlayer-currentTime {
 	font-weight: bold;
+}
+
+.videoPlayer-scrubber {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 64px;
+	width: 100%;
+	background: #fff2;
+}
+
+.videoPlayer-scrubber-bar {
+	height: 4px;
+}
+
+.videoPlayer-scrubber-bar:hover {
+	height: 8px;
+}
+
+.videoPlayer-scrubber-bar .played {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	height: 100%;
+	background-color: #fff;
+}
+
+.videoPlayer-scrubber-bar .buffered {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	height: 100%;
+	background-color: #fff5;
+}
+
+.videoPlayer-menuButton {
+	position: relative;
+}
+
+.videoPlayer-button-menu {
+	background: #000D;
+	position: absolute;
+	bottom: 100%;
+	left: -100px;
+	width: 250px;
+}
+
+.videoPlayer-button-menu-title {
+	font-weight: bold;
+	padding: 8px 12px;
+	border-bottom: 1px solid #fff;
+}
+
+.videoPlayer-button-menu-list {
+	max-height: 200px;
+	overflow-y: scroll;
+}
+
+.videoPlayer-button-menu-item {
+	padding: 8px 12px;
+}
+
+.videoPlayer-button-menu-item.active {
+	background-color: #fff3;
+}
+
+.videoPlayer-button-menu-item:hover {
+	background-color: #fff5;
 }
