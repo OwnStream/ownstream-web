@@ -6,6 +6,19 @@ import {client} from "../../api/api.ts";
 import {BanIcon, CheckIcon, CopyIcon, HourglassIcon, LoaderIcon, RefreshCwIcon, SquareIcon} from "lucide-react";
 import type {Job} from "../../api/types.ts";
 import InfiniteScroll from "react-infinite-scroll-component";
+import {formatDistanceToNow} from 'date-fns'
+
+function toHhMmSs(timestamp: number) {
+	timestamp = timestamp / 1000;
+	const hours = Math.floor(timestamp / 3600);
+	const minutes = Math.floor(timestamp / 60);
+	const seconds = Math.floor(timestamp % 60);
+	return hours > 0
+		? `${hours}h ${minutes.toString()}m ${seconds.toString()}s`
+		: minutes > 0
+			? `${minutes.toString()}m ${seconds.toString()}s`
+			: `${seconds.toString()}s`;
+}
 
 function JobButton({icon, tooltip, onClick}: { icon: JSX.Element, tooltip: string, onClick: () => void }) {
 	return (<button onClick={onClick} title={tooltip} className={"jobButton"}>
@@ -19,6 +32,7 @@ function JobRow({job}: {
 	let icon = <HourglassIcon/>
 	let className = "jobsItem-icon_waiting"
 	const buttons: ReactElement[] = [];
+	let time = "";
 	switch (job.status) {
 		case "Pending":
 			icon = <HourglassIcon/>
@@ -33,10 +47,12 @@ function JobRow({job}: {
 								   alert(e);
 							   }
 						   }}/>));
+			time = `Created ${formatDistanceToNow(new Date(job.createdAt))}`;
 			break;
 		case "Starting":
 			icon = <LoaderIcon/>
 			className = "jobsItem-icon_running"
+			time = "About to start..."
 			break;
 		case "Processing":
 			icon = <LoaderIcon/>
@@ -51,6 +67,7 @@ function JobRow({job}: {
 								   alert(e);
 							   }
 						   }}/>));
+			time = `Running... ${toHhMmSs(new Date().getTime() - new Date(job.startedAt!).getTime())}`
 			break;
 		case "Completed":
 			icon = <CheckIcon/>
@@ -65,6 +82,7 @@ function JobRow({job}: {
 								   alert(e);
 							   }
 						   }}/>));
+			time = `Finished ${formatDistanceToNow(new Date(job.completedAt ?? ""))} ago (ran for ${toHhMmSs(new Date(job.completedAt!).getTime() - new Date(job.startedAt!).getTime())})`
 			break;
 		case "Failed":
 			icon = <BanIcon/>
@@ -91,6 +109,8 @@ function JobRow({job}: {
 								   alert(e);
 							   }
 						   }}/>));
+			time = `Failed ${formatDistanceToNow(new Date(job.completedAt ?? job.updatedAt ?? ""))} ago
+			(ran for ${toHhMmSs(new Date(job.completedAt!).getTime() - new Date(job.startedAt!).getTime())})`
 			break;
 	}
 	return (
@@ -102,6 +122,7 @@ function JobRow({job}: {
 					<span className={"jobsItem-message"}>
 						{job.message?.includes("\n") ? job.message.split("\n")[0] + "..." : job.message}
 					</span>
+					<span className={"jobsItem-time"}>{time}</span>
 				</div>
 				<div className={"jobsItem-buttons"}>
 					{buttons}

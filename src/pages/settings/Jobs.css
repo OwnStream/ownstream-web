@@ -33,7 +33,12 @@
 
 .jobsItem-message {
 	user-select: text;
+	margin: 4px 0;
 	font-size: .9rem;
+}
+
+.jobsItem-time {
+	font-size: .8rem;
 }
 
 .jobsItem-buttons {
