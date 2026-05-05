@@ -11,7 +11,7 @@ import {formatDistanceToNow} from 'date-fns'
 function toHhMmSs(timestamp: number) {
 	timestamp = timestamp / 1000;
 	const hours = Math.floor(timestamp / 3600);
-	const minutes = Math.floor(timestamp / 60);
+	const minutes = Math.floor(timestamp / 60) % 60;
 	const seconds = Math.floor(timestamp % 60);
 	return hours > 0
 		? `${hours}h ${minutes.toString()}m ${seconds.toString()}s`
