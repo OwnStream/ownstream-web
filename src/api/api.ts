@@ -79,6 +79,14 @@ class OwnStreamApiClient {
 		return await this.request<PagedResponse<Job>>(`api/jobs/list?delta=${delta}&page=${page}&limit=${limit}`);
 	}
 
+	async requeueJob(id: string): Promise<SuccessResponse<Job>> {
+		return await this.request<SuccessResponse<Job>>(`api/jobs/${id}/requeue`);
+	}
+
+	async stopJob(id: string): Promise<SuccessResponse<Job>> {
+		return await this.request<SuccessResponse<Job>>(`api/jobs/${id}/stop`);
+	}
+
 	async getVideo(id: string): Promise<Video> {
 		return await this.request<Video>(`api/video/${id}`);
 	}

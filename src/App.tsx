@@ -20,6 +20,7 @@ import EditLibrary from "./pages/settings/EditLibrary.tsx";
 import WebhooksSettings from "./pages/settings/Webhooks.tsx";
 import CreateWebhook from "./pages/settings/NewWebhook.tsx";
 import EditWebhook from "./pages/settings/EditWebhook.tsx";
+import JobsTab from "./pages/settings/Jobs.tsx";
 
 export default function App() {
 	return (
@@ -65,6 +66,7 @@ function AppRoutes() {
 					<Route path="webhooks" element={<WebhooksSettings/>}/>
 					<Route path="webhooks/new" element={<CreateWebhook/>}/>
 					<Route path="webhooks/:id" element={<EditWebhook/>}/>
+					<Route path="jobs" element={<JobsTab/>}/>
 				</Route>
 			</Route>
 		</Routes>
