@@ -18,6 +18,7 @@ import {
 	VolumeIcon,
 	VolumeXIcon
 } from "lucide-react";
+import PgsSubtitlePlayer from "../pgs";
 
 function PlayerButton(props: { icon: JSX.Element, tooltip: string, onclick: () => void }) {
 	return (<div className={"videoPlayer-button"} title={props.tooltip} onClick={props.onclick}>
@@ -67,6 +68,7 @@ export default function WatchScreen() {
 	const [video, setVideo] = useState<Video | null>(null);
 	const [watchProgress, setWatchProgress] = useState<WatchProgress | null>(null);
 	const videoRef = useRef<HTMLVideoElement>(null);
+	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<Error | ErrorData | null>(null);
 	const [playing, setPlaying] = useState<boolean>(false);
@@ -80,6 +82,7 @@ export default function WatchScreen() {
 	const [openTab, setOpenTab] = useState<string | null>(null);
 	const [lastActiveSubtitle, setLastActiveSubtitle] = useState<SubtitleFile | null>(null);
 	const [activeSubtitle, setActiveSubtitle] = useState<SubtitleFile | null>(null);
+	const [pgs] = useState<PgsSubtitlePlayer>(new PgsSubtitlePlayer());
 
 	useEffect(() => {
 		(async () => {
@@ -112,7 +115,6 @@ export default function WatchScreen() {
 					hls.on(Hls.Events.ERROR, (_, e) => {
 						setError(e);
 					});
-					window.hls = hls;
 				} else if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
 					// For Safari (native HLS support)
 					videoRef.current.src = client.getMediaUrl(videoId!);
@@ -189,15 +191,14 @@ export default function WatchScreen() {
 	function getSubtitleType(x: SubtitleFile | null): "pgs" | "webvtt" | null {
 		if (x === null) return null;
 		const keys = Object.keys(x.files);
-		if (keys.includes("pgs")) return "pgs";
-		//if (keys.includes("ass")) return "subtitlesoctopus";
+		if (keys.includes("sup")) return "pgs";
 		if (keys.includes("vtt")) return "webvtt";
 		return null;
 	}
 
 	function subtitleSupported(x: SubtitleFile) {
 		const keys = Object.keys(x.files);
-		return keys.includes("pgs") || /*keys.includes("ass") ||*/ keys.includes("vtt");
+		return keys.includes("sup") || keys.includes("vtt");
 	}
 
 	useEffect(() => {
@@ -207,17 +208,51 @@ export default function WatchScreen() {
 		const newType = getSubtitleType(activeSubtitle);
 
 		if (lastType !== newType) {
-			// TODO: Dispose old subtitle player, deploy new one
+			switch (lastType) {
+				case "pgs":
+					pgs.setEnabled(false);
+					break;
+				case "webvtt":
+					if (videoRef.current) {
+						for (let i = 0; i < videoRef.current.textTracks.length; i++) {
+							videoRef.current.textTracks[i].mode = "disabled";
+						}
+					}
+					break;
+			}
+
+			switch (newType) {
+				case "pgs":
+					pgs.setEnabled(true);
+					if (videoRef.current) pgs.attachTo(videoRef.current);
+					if (canvasRef.current) pgs.attachTo(canvasRef.current);
+					break;
+			}
 		}
 
-		// TODO: Load the subtitle track
+		switch (newType) {
+			case "pgs":
+				pgs.loadSubtitle(client.getMediaUrl(videoId!, "captions", activeSubtitle!.files["sup"])).then();
+				break;
+			case "webvtt":
+				if (videoRef.current) {
+					for (let i = 0; i < videoRef.current.textTracks.length; i++) {
+						videoRef.current.textTracks[i].mode = "disabled";
+					}
+					const track = videoRef.current.textTracks.getTrackById(`subtitle_${videoId!}_${activeSubtitle?.id}`)
+					console.log(track);
+					if (track) track.mode = "showing";
+				}
+				break;
+		}
 
+		setLastActiveSubtitle(activeSubtitle);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeSubtitle]);
 
 	if (error) {
 		if (error instanceof Error) return <div>{error.message}</div>;
-		else return <div>{error.toString()}</div>;
+		else return <div>{JSON.stringify(error)}</div>;
 	}
 
 	return (<div className={"videoPlayer"}>
@@ -248,8 +283,20 @@ export default function WatchScreen() {
 					}}
 					onDurationChange={e => setDuration(e.currentTarget.duration)}
 					onVolumeChange={e => setVolume(e.currentTarget.muted ? 0 : e.currentTarget.volume)}
-				/>
-				<canvas/>
+				>
+					{(video?.subtitles ?? [])
+						.filter(x => getSubtitleType(x) == "webvtt")
+						.map(x => (
+							<track
+								id={`subtitle_${videoId!}_${x.id}`}
+								key={x.id}
+								kind="captions"
+								srcLang={x.language}
+								label={x.title}
+								src={client.getMediaUrl(videoId!, "captions", x.files["vtt"])}/>
+						))}
+				</video>
+				<canvas ref={canvasRef}/>
 			</div>
 			<div className={"videoPlayer-info"}>
 				<PlayerButton icon={<ChevronLeftIcon/>} tooltip={"Go Back"} onclick={() => {
@@ -316,7 +363,7 @@ export default function WatchScreen() {
 								?.filter(subtitleSupported)
 								?.map(x => (
 									<PlayerMenuItem
-										label={`${x.title} (${x.language}, ${Object.keys(x.files).join(", ")})`}
+										label={x.title}
 										onclick={() => {
 											setOpenTab(null);
 											setActiveSubtitle(x);
