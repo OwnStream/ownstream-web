@@ -1,5 +1,5 @@
 import "./WatchScreen.css";
-import {type JSX, type ReactNode, useEffect, useRef, useState} from "react";
+import {type JSX, type KeyboardEvent, type ReactNode, useEffect, useRef, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import type {SubtitleFile, Video, WatchProgress} from "../api/types.ts";
 import {client} from "../api/api.ts";
@@ -19,7 +19,7 @@ import {
 	VolumeXIcon
 } from "lucide-react";
 import PgsSubtitlePlayer from "../pgs";
-// @ts-ignore
+// @ts-expect-error libass-wasm does not come with TypeScript definitions
 import SubtitlesOctopus from "libass-wasm";
 
 function PlayerButton(props: { icon: JSX.Element, tooltip: string, onclick: () => void }) {
@@ -140,6 +140,80 @@ export default function WatchScreen() {
 			}
 		};
 	}, [video]);
+
+	function handleHotkey(e: KeyboardEvent) {
+		let handled = true;
+		switch (e.code) {
+			case "KeyF":
+				toggleFullscreen();
+				break;
+			case "KeyM":
+				toggleMuted();
+				break;
+			case "ArrowLeft":
+				if (e.altKey || e.shiftKey || e.metaKey || e.ctrlKey) { handled = false; break; }
+				videoRef.current!.currentTime -= 5;
+				break;
+			case "ArrowRight":
+				if (e.altKey || e.shiftKey || e.metaKey || e.ctrlKey) { handled = false; break; }
+				videoRef.current!.currentTime += 5;
+				break;
+			case "ArrowUp":
+				adjustVolume(1);
+				break;
+			case "ArrowDown":
+				adjustVolume(0);
+				break;
+			case "Space":
+				togglePlay();
+				break;
+			case "Digit0":
+			case "Alpha0":
+				if (e.shiftKey) videoRef.current!.currentTime = 0; else handled = false;
+				break;
+			case "Digit1":
+			case "Alpha1":
+				if (e.shiftKey) videoRef.current!.currentTime = videoRef.current!.duration * 0.1; else handled = false;
+				break;
+			case "Digit2":
+			case "Alpha2":
+				if (e.shiftKey) videoRef.current!.currentTime = videoRef.current!.duration * 0.2; else handled = false;
+				break;
+			case "Digit3":
+			case "Alpha3":
+				if (e.shiftKey) videoRef.current!.currentTime = videoRef.current!.duration * 0.3; else handled = false;
+				break;
+			case "Digit4":
+			case "Alpha4":
+				if (e.shiftKey) videoRef.current!.currentTime = videoRef.current!.duration * 0.4; else handled = false;
+				break;
+			case "Digit5":
+			case "Alpha5":
+				if (e.shiftKey) videoRef.current!.currentTime = videoRef.current!.duration * 0.5; else handled = false;
+				break;
+			case "Digit6":
+			case "Alpha6":
+				if (e.shiftKey) videoRef.current!.currentTime = videoRef.current!.duration * 0.6; else handled = false;
+				break;
+			case "Digit7":
+			case "Alpha7":
+				if (e.shiftKey) videoRef.current!.currentTime = videoRef.current!.duration * 0.7; else handled = false;
+				break;
+			case "Digit8":
+			case "Alpha8":
+				if (e.shiftKey) videoRef.current!.currentTime = videoRef.current!.duration * 0.8; else handled = false;
+				break;
+			case "Digit9":
+			case "Alpha9":
+				if (e.shiftKey) videoRef.current!.currentTime = videoRef.current!.duration * 0.9; else handled = false;
+				break;
+			default:
+				handled = false;
+				console.log(e.code);
+				break;
+		}
+		if (handled) e.preventDefault();
+	}
 
 	function togglePlay() {
 		setOpenTab(null);
@@ -281,7 +355,9 @@ export default function WatchScreen() {
 		else return <div>{JSON.stringify(error)}</div>;
 	}
 
-	return (<div className={"videoPlayer"}>
+	return (<div className={"videoPlayer"}
+	             tabIndex={0}
+	             onKeyDown={handleHotkey}>
 			<div className={"videoPlayer-player"}
 			     onClick={togglePlay}
 			     onDoubleClick={toggleFullscreen}
