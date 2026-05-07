@@ -86,59 +86,49 @@ export default function WatchScreen() {
 	const [pgs] = useState<PgsSubtitlePlayer>(new PgsSubtitlePlayer());
 	const [libass, setLibass] = useState<SubtitlesOctopus | null>(null);
 
-	useEffect(() => {
-		(async () => {
-			try {
-				const [progress, video] = await Promise.all([
-					client.getProgress(videoId!),
-					client.getVideo(videoId!)
-				]);
-				setWatchProgress(progress);
-				setVideo(video);
-			} catch (e) {
-				setError(e as Error);
-			}
-		})();
-	}, [videoId]);
-
-	useEffect(() => {
-		if (!video) return;
-		(() => {
-			setLoading(false);
-
-			if (videoRef.current && !hlsLoadStarted) {
-				setHlsLoadStarted(true);
-				if (Hls.isSupported()) {
-					const hls = new Hls();
-					setHls(hls);
-					console.log(new Date(), "Loading...")
-					hls.loadSource(client.getMediaUrl(videoId!));
-					hls.attachMedia(videoRef.current);
-					hls.on(Hls.Events.ERROR, (_, e) => {
-						setError(e);
-					});
-				} else if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
-					// For Safari (native HLS support)
-					videoRef.current.src = client.getMediaUrl(videoId!);
-				} else {
-					setError(new Error("Your client does not support HLS playlists."))
-				}
-				videoRef.current.addEventListener('loadedmetadata', () => {
-					if (videoRef.current && watchProgress) {
-						videoRef.current.currentTime = watchProgress.position / 1000;
-						videoRef.current?.play();
-					}
-				});
-			}
-		})();
-
-		return () => {
+	function togglePlay() {
+		setOpenTab(null);
+		if (playing)
 			videoRef.current?.pause();
-			if (hls) {
-				hls.destroy();
+		else
+			videoRef.current?.play();
+	}
+
+	function toggleMuted() {
+		setOpenTab(null);
+		if (videoRef.current)
+			videoRef.current.muted = !videoRef.current.muted;
+
+		if (videoRef.current?.muted) setVolume(0);
+	}
+
+	function adjustVolume(dir: number) {
+		setOpenTab(null);
+		if (videoRef.current) {
+			if (dir > 0) {
+				try {
+					videoRef.current.volume += .05;
+				} catch (e) {
+					videoRef.current.volume = 1;
+				}
+			} else {
+				try {
+					videoRef.current.volume -= .05;
+				} catch (e) {
+					videoRef.current.volume = 0;
+				}
 			}
-		};
-	}, [video]);
+		}
+	}
+
+	async function toggleFullscreen() {
+		setOpenTab(null);
+		const playerParentElement = videoRef.current?.parentElement?.parentElement;
+		if (document.fullscreenElement === playerParentElement)
+			await document.exitFullscreen();
+		else
+			await playerParentElement?.requestFullscreen();
+	}
 
 	function handleHotkey(e: KeyboardEvent) {
 		let handled = true;
@@ -214,63 +204,6 @@ export default function WatchScreen() {
 		if (handled) e.preventDefault();
 	}
 
-	function togglePlay() {
-		setOpenTab(null);
-		if (playing)
-			videoRef.current?.pause();
-		else
-			videoRef.current?.play();
-	}
-
-	function toggleMuted() {
-		setOpenTab(null);
-		if (videoRef.current)
-			videoRef.current.muted = !videoRef.current.muted;
-
-		if (videoRef.current?.muted) setVolume(0);
-	}
-
-	async function toggleFullscreen() {
-		setOpenTab(null);
-		const playerParentElement = videoRef.current?.parentElement?.parentElement;
-		if (document.fullscreenElement === playerParentElement)
-			await document.exitFullscreen();
-		else
-			await playerParentElement?.requestFullscreen();
-	}
-
-	function adjustVolume(dir: number) {
-		setOpenTab(null);
-		if (videoRef.current) {
-			if (dir > 0) {
-				try {
-					videoRef.current.volume += .05;
-				} catch (e) {
-					videoRef.current.volume = 1;
-				}
-			} else {
-				try {
-					videoRef.current.volume -= .05;
-				} catch (e) {
-					videoRef.current.volume = 0;
-				}
-			}
-		}
-	}
-
-	useEffect(() => {
-		document.addEventListener("fullscreenchange", (_) => {
-			setIsFullscreen(document.fullscreenElement === videoRef.current?.parentElement?.parentElement)
-		});
-	}, []);
-
-	useEffect(() => {
-		if (libass) {
-			libass.setCurrentTime(time);
-			libass.setIsPaused(!playing, time)
-		}
-	}, [libass, time, playing]);
-
 	function getSubtitleType(x: SubtitleFile | null): "pgs" | "webvtt" | "libass" | null {
 		if (x === null) return null;
 		const keys = Object.keys(x.files);
@@ -286,6 +219,63 @@ export default function WatchScreen() {
 		return keys.includes("sup") || keys.includes("vtt") || keys.includes("ass") || keys.includes("ssa");
 	}
 
+	// Loads the video info & last watch progress
+	useEffect(() => {
+		(async () => {
+			try {
+				const [progress, video] = await Promise.all([
+					client.getProgress(videoId!),
+					client.getVideo(videoId!)
+				]);
+				setWatchProgress(progress);
+				setVideo(video);
+			} catch (e) {
+				setError(e as Error);
+			}
+		})();
+	}, [videoId]);
+
+	// Loads the video into Hls.JS
+	useEffect(() => {
+		if (!video) return;
+		(() => {
+			setLoading(false);
+
+			if (videoRef.current && !hlsLoadStarted) {
+				setHlsLoadStarted(true);
+				if (Hls.isSupported()) {
+					const hls = new Hls();
+					setHls(hls);
+					console.log(new Date(), "Loading...")
+					hls.loadSource(client.getMediaUrl(videoId!));
+					hls.attachMedia(videoRef.current);
+					hls.on(Hls.Events.ERROR, (_, e) => {
+						setError(e);
+					});
+				} else if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
+					// For Safari (native HLS support)
+					videoRef.current.src = client.getMediaUrl(videoId!);
+				} else {
+					setError(new Error("Your client does not support HLS playlists."))
+				}
+				videoRef.current.addEventListener('loadedmetadata', () => {
+					if (videoRef.current && watchProgress) {
+						videoRef.current.currentTime = watchProgress.position / 1000;
+						videoRef.current?.play();
+					}
+				});
+			}
+		})();
+
+		return () => {
+			videoRef.current?.pause();
+			if (hls) {
+				hls.destroy();
+			}
+		};
+	}, [video]);
+
+	// Handles subtitle switching with native WebVTT, PGS & SubtitlesOctopus
 	useEffect(() => {
 		if (lastActiveSubtitle == null && activeSubtitle == null) return;
 
@@ -360,6 +350,23 @@ export default function WatchScreen() {
 		setLastActiveSubtitle(activeSubtitle);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeSubtitle]);
+
+	// For SubtitlesOctopus, updates the video time & play status,
+	// since we're not connected to the player, and share the canvas
+	// with our PGS renderer.
+	useEffect(() => {
+		if (libass) {
+			libass.setCurrentTime(time);
+			libass.setIsPaused(!playing, time)
+		}
+	}, [libass, time, playing]);
+
+	// Fullscreen event handler, updates the isFullscreen value
+	useEffect(() => {
+		document.addEventListener("fullscreenchange", (_) => {
+			setIsFullscreen(document.fullscreenElement === videoRef.current?.parentElement?.parentElement)
+		});
+	}, []);
 
 	if (error) {
 		if (error instanceof Error) return <div>{error.message}</div>;
