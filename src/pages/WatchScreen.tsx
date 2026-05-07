@@ -5,7 +5,6 @@ import type {SubtitleFile, Video, WatchProgress} from "../api/types.ts";
 import {client} from "../api/api.ts";
 import Hls, {type ErrorData} from "hls.js";
 import {
-	BoltIcon,
 	CaptionsIcon,
 	ChevronLeftIcon,
 	MaximizeIcon,
@@ -305,6 +304,18 @@ export default function WatchScreen() {
 						}
 					}
 					break;
+				case "libass":
+					if (libass) {
+						libass.dispose();
+						libass.ctx.clearRect(
+							0,
+							0,
+							libass.ctx.canvas.width,
+							libass.ctx.canvas.height);
+						// eslint-disable-next-line react-hooks/set-state-in-effect
+						setLibass(null);
+					}
+					break;
 			}
 
 			switch (newType) {
@@ -494,9 +505,6 @@ export default function WatchScreen() {
 						</div>
 					</PlayerMenuButton>
 				}
-				<PlayerButton icon={<BoltIcon/>} tooltip={"Settings"} onclick={() => {
-
-				}}/>
 				<PlayerButton icon={isFullscreen ? <MinimizeIcon/> : <MaximizeIcon/>}
 				              tooltip={isFullscreen ? "Exit Full Screen" : "Full Screen"} onclick={toggleFullscreen}/>
 			</div>

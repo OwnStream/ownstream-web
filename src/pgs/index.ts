@@ -26,8 +26,7 @@ export default class PgsSubtitlePlayer {
 				0,
 				0,
 				this.attachedCanvasContext.canvas.width,
-				this.attachedCanvasContext.canvas.height)
-			;
+				this.attachedCanvasContext.canvas.height);
 		this.enabled = enabled;
 	}
 
