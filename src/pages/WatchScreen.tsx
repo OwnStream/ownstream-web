@@ -256,7 +256,8 @@ export default function WatchScreen() {
 					subUrl: client.getMediaUrl(videoId!, "captions", activeSubtitle!.files["ass"] || activeSubtitle!.files["ssa"]),
 					workerUrl: "/node_modules/libass-wasm/dist/js/subtitles-octopus-worker.js",
 					legacyWorkerUrl: "/node_modules/libass-wasm/dist/js/subtitles-octopus-worker-legacy.js",
-					fallbackFont: "/assets/fonts/noto_sans/NotoSans-VariableFont_wdth,wght.ttf"
+					fallbackFont: "/assets/fonts/noto_sans/NotoSans-VariableFont_wdth,wght.ttf",
+					fonts: video?.attachments?.map(x => client.getMediaUrl(videoId!, "attachments", x))
 				}));
 				break;
 			case "webvtt":

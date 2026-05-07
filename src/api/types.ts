@@ -144,7 +144,8 @@ export type Video = {
 	previews: PreviewFile[] | null,
 	content: Content | null,
 	episode: Episode | null,
-	segments: VideoSegment[] | null
+	segments: VideoSegment[] | null,
+	attachments: string[] | null
 }
 export type VideoSegment = {
 	id: string,
