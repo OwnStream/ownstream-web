@@ -214,7 +214,6 @@ export default function WatchScreen() {
 				break;
 			default:
 				handled = false;
-				console.log(e.code);
 				break;
 		}
 		if (handled) e.preventDefault();
@@ -278,7 +277,6 @@ export default function WatchScreen() {
 					? document.body.clientWidth - padding - imgWidth * 2
 					// Otherwise, keep on top of the cursor
 					: e.clientX - imgWidth;
-		console.log(left);
 		scrubberRef.current.style.left = left + "px";
 		scrubberTextRef.current.innerText = toHhMmSs(time);
 		const hqPreview = video?.previewFiles?.findLast(_ => true);
@@ -305,7 +303,6 @@ export default function WatchScreen() {
 				setWatchProgress(progress);
 				setVideo(video);
 				video.previewFiles?.forEach(file => {
-					console.log("Caching preview file", file.template)
 					for (let i = 1; i <= file.frameCount; i++) {
 						const name = file.template.replace("%d", i.toString());
 						const img = new Image();
@@ -333,7 +330,6 @@ export default function WatchScreen() {
 				if (Hls.isSupported()) {
 					const hls = new Hls();
 					setHls(hls);
-					console.log(new Date(), "Loading...")
 					hls.loadSource(client.getMediaUrl(videoId!));
 					hls.attachMedia(videoRef.current);
 					hls.on(Hls.Events.ERROR, (_, e) => {
@@ -428,7 +424,6 @@ export default function WatchScreen() {
 						videoRef.current.textTracks[i].mode = "disabled";
 					}
 					const track = videoRef.current.textTracks.getTrackById(`subtitle_${videoId!}_${activeSubtitle?.id}`)
-					console.log(track);
 					if (track) track.mode = "showing";
 				}
 				break;
