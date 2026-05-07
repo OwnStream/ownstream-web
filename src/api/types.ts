@@ -141,7 +141,7 @@ export type Video = {
 	fps: number,
 	language: string,
 	subtitles: SubtitleFile[] | null,
-	previews: PreviewFile[] | null,
+	previewFiles: PreviewFile[] | null,
 	content: Content | null,
 	episode: Episode | null,
 	segments: VideoSegment[] | null,

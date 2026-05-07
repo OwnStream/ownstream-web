@@ -1,7 +1,7 @@
 import "./WatchScreen.css";
-import {type JSX, type KeyboardEvent, type ReactNode, useEffect, useRef, useState} from "react";
+import {type JSX, type KeyboardEvent, type MouseEvent, type ReactNode, useEffect, useRef, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import type {SubtitleFile, Video, WatchProgress} from "../api/types.ts";
+import type {PreviewFile, SubtitleFile, Video, WatchProgress} from "../api/types.ts";
 import {client} from "../api/api.ts";
 import Hls, {type ErrorData} from "hls.js";
 import {
@@ -86,7 +86,12 @@ export default function WatchScreen() {
 	const [pgs] = useState<PgsSubtitlePlayer>(new PgsSubtitlePlayer());
 	const [libass, setLibass] = useState<SubtitlesOctopus | null>(null);
 	const [controlsVisible, setControlsVisible] = useState(true);
-	const hideTimeoutRef = useRef<number | null>(null);
+	const hideTimeoutRef = useRef<number>(null);
+	const scrubberRef = useRef<HTMLDivElement>(null);
+	const scrubberCanvasRef = useRef<HTMLCanvasElement>(null);
+	const scrubberCanvasCtxRef = useRef<CanvasRenderingContext2D>(null);
+	const scrubberTextRef = useRef<HTMLDivElement>(null);
+	const [imageCache, setImageCache] = useState<Record<string, HTMLImageElement>>({});
 
 	function togglePlay() {
 		showControls();
@@ -145,11 +150,17 @@ export default function WatchScreen() {
 				toggleMuted();
 				break;
 			case "ArrowLeft":
-				if (e.altKey || e.shiftKey || e.metaKey || e.ctrlKey) { handled = false; break; }
+				if (e.altKey || e.shiftKey || e.metaKey || e.ctrlKey) {
+					handled = false;
+					break;
+				}
 				videoRef.current!.currentTime -= 5;
 				break;
 			case "ArrowRight":
-				if (e.altKey || e.shiftKey || e.metaKey || e.ctrlKey) { handled = false; break; }
+				if (e.altKey || e.shiftKey || e.metaKey || e.ctrlKey) {
+					handled = false;
+					break;
+				}
 				videoRef.current!.currentTime += 5;
 				break;
 			case "ArrowUp":
@@ -234,6 +245,55 @@ export default function WatchScreen() {
 		}, 5000);
 	}
 
+	function pasteTemplateIntoImage(preview: PreviewFile, time: number, duration: number) {
+		if (!scrubberCanvasCtxRef.current || !scrubberCanvasRef.current) return;
+		const period = preview.period || duration / 100;
+		const frame = Math.floor(time / period);
+		const image = Math.floor(frame / (preview.columns * preview.rows));
+		const frameInImage = frame % (preview.columns * preview.rows);
+		const y = Math.floor(frameInImage / preview.rows);
+		const x = Math.floor(frameInImage % preview.columns);
+		const fileName = preview.template.replace("%d", (image + 1).toString());
+		const img = imageCache[fileName];
+		const frameW = img.width / preview.columns;
+		const frameH = img.height / preview.rows;
+		if (img) {
+			scrubberCanvasRef.current.width = frameW;
+			scrubberCanvasRef.current.height = frameH;
+			scrubberCanvasCtxRef.current.drawImage(img, x * frameW, y * frameH, frameW, frameH, 0, 0, frameW, frameH);
+		}
+	}
+
+	function onScrubberHover(e: MouseEvent<HTMLDivElement>) {
+		if (!scrubberRef.current || !scrubberTextRef.current) return;
+		const prog = e.clientX / e.currentTarget.clientWidth;
+		const time = (videoRef.current?.duration || 0) * prog;
+		const imgWidth = scrubberRef.current.clientWidth / 2;
+		const padding = 16;
+		const left =
+			// If too much to the left, keep on the left side
+			(e.clientX - padding) < imgWidth ? padding
+				// If too much to the right, keep on the right side
+				: (e.clientX + imgWidth + padding) > document.body.clientWidth
+					? document.body.clientWidth - padding - imgWidth * 2
+					// Otherwise, keep on top of the cursor
+					: e.clientX - imgWidth;
+		console.log(left);
+		scrubberRef.current.style.left = left + "px";
+		scrubberTextRef.current.innerText = toHhMmSs(time);
+		const hqPreview = video?.previewFiles?.findLast(_ => true);
+		if (hqPreview != undefined) {
+			pasteTemplateIntoImage(hqPreview, time, videoRef.current?.duration ?? 100);
+		}
+	}
+
+	function onScrubberClick(e: MouseEvent<HTMLDivElement>) {
+		if (!videoRef.current) return;
+		const newTime = (videoRef.current?.duration || 0) * (e.clientX / e.currentTarget.clientWidth);
+		videoRef.current.currentTime = newTime;
+		setTime(newTime);
+	}
+
 	// Loads the video info & last watch progress
 	useEffect(() => {
 		(async () => {
@@ -244,6 +304,18 @@ export default function WatchScreen() {
 				]);
 				setWatchProgress(progress);
 				setVideo(video);
+				video.previewFiles?.forEach(file => {
+					console.log("Caching preview file", file.template)
+					for (let i = 1; i <= file.frameCount; i++) {
+						const name = file.template.replace("%d", i.toString());
+						const img = new Image();
+						img.src = client.getMediaUrl(videoId!, "trickplay", name);
+						setImageCache(x => {
+							x[name] = img;
+							return x;
+						});
+					}
+				});
 			} catch (e) {
 				setError(e as Error);
 			}
@@ -383,6 +455,12 @@ export default function WatchScreen() {
 		});
 	}, []);
 
+	// Get the scrubber canvas context
+	useEffect(() => {
+		if (scrubberCanvasRef.current)
+			scrubberCanvasCtxRef.current = scrubberCanvasRef.current.getContext("2d");
+	}, [scrubberCanvasRef]);
+
 	if (error) {
 		if (error instanceof Error) return <div>{error.message}</div>;
 		else return <div>{JSON.stringify(error)}</div>;
@@ -390,7 +468,7 @@ export default function WatchScreen() {
 
 	return (<div className={`videoPlayer ${controlsVisible && "controls-visible"}`.trim()}
 	             tabIndex={0}
-				 onMouseMove={showControls}
+	             onMouseMove={showControls}
 	             onKeyDown={handleHotkey}>
 			<div className={"videoPlayer-player"}
 			     onClick={togglePlay}
@@ -455,7 +533,7 @@ export default function WatchScreen() {
 						</div>)}
 			</div>
 			<div className={"videoPlayer-scrubber"}>
-				<div className={"videoPlayer-scrubber-bar"}>
+				<div className={"videoPlayer-scrubber-bar"} onMouseMove={onScrubberHover} onClick={onScrubberClick}>
 					{buffers.map(b =>
 						(<div className={"buffered"}
 						      style={{
@@ -464,6 +542,10 @@ export default function WatchScreen() {
 							  }}></div>)
 					)}
 					<div className={"played"} style={{width: `${time / duration * 100}%`}}></div>
+				</div>
+				<div className={"videoPlayer-scrubber-overlay"} ref={scrubberRef}>
+					<canvas ref={scrubberCanvasRef}/>
+					<div ref={scrubberTextRef}/>
 				</div>
 			</div>
 			<div className={"videoPlayer-controls"}>
