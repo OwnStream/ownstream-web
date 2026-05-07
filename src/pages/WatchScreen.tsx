@@ -19,6 +19,8 @@ import {
 	VolumeXIcon
 } from "lucide-react";
 import PgsSubtitlePlayer from "../pgs";
+// @ts-ignore
+import SubtitlesOctopus from "libass-wasm";
 
 function PlayerButton(props: { icon: JSX.Element, tooltip: string, onclick: () => void }) {
 	return (<div className={"videoPlayer-button"} title={props.tooltip} onClick={props.onclick}>
@@ -83,6 +85,7 @@ export default function WatchScreen() {
 	const [lastActiveSubtitle, setLastActiveSubtitle] = useState<SubtitleFile | null>(null);
 	const [activeSubtitle, setActiveSubtitle] = useState<SubtitleFile | null>(null);
 	const [pgs] = useState<PgsSubtitlePlayer>(new PgsSubtitlePlayer());
+	const [libass, setLibass] = useState<SubtitlesOctopus | null>(null);
 
 	useEffect(() => {
 		(async () => {
@@ -188,17 +191,26 @@ export default function WatchScreen() {
 		});
 	}, []);
 
-	function getSubtitleType(x: SubtitleFile | null): "pgs" | "webvtt" | null {
+	useEffect(() => {
+		if (libass) {
+			libass.setCurrentTime(time);
+			libass.setIsPaused(!playing, time)
+		}
+	}, [libass, time, playing]);
+
+	function getSubtitleType(x: SubtitleFile | null): "pgs" | "webvtt" | "libass" | null {
 		if (x === null) return null;
 		const keys = Object.keys(x.files);
 		if (keys.includes("sup")) return "pgs";
+		if (keys.includes("ass")) return "libass";
+		if (keys.includes("ssa")) return "libass";
 		if (keys.includes("vtt")) return "webvtt";
 		return null;
 	}
 
 	function subtitleSupported(x: SubtitleFile) {
 		const keys = Object.keys(x.files);
-		return keys.includes("sup") || keys.includes("vtt");
+		return keys.includes("sup") || keys.includes("vtt") || keys.includes("ass") || keys.includes("ssa");
 	}
 
 	useEffect(() => {
@@ -233,6 +245,19 @@ export default function WatchScreen() {
 		switch (newType) {
 			case "pgs":
 				pgs.loadSubtitle(client.getMediaUrl(videoId!, "captions", activeSubtitle!.files["sup"])).then();
+				break;
+			case "libass":
+				if (libass)
+					libass.dispose();
+				canvasRef.current!.width = videoRef.current!.videoWidth;
+				canvasRef.current!.height = videoRef.current!.videoHeight;
+				setLibass(new SubtitlesOctopus({
+					canvas: canvasRef.current,
+					subUrl: client.getMediaUrl(videoId!, "captions", activeSubtitle!.files["ass"] || activeSubtitle!.files["ssa"]),
+					workerUrl: "/node_modules/libass-wasm/dist/js/subtitles-octopus-worker.js",
+					legacyWorkerUrl: "/node_modules/libass-wasm/dist/js/subtitles-octopus-worker-legacy.js",
+					fallbackFont: "/assets/fonts/noto_sans/NotoSans-VariableFont_wdth,wght.ttf"
+				}));
 				break;
 			case "webvtt":
 				if (videoRef.current) {
