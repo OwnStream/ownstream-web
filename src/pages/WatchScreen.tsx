@@ -279,7 +279,7 @@ export default function WatchScreen() {
 					: e.clientX - imgWidth;
 		scrubberRef.current.style.left = left + "px";
 		scrubberTextRef.current.innerText = toHhMmSs(time);
-		const hqPreview = video?.previewFiles?.findLast(_ => true);
+		const hqPreview = video?.previewFiles?.find(x => x.template.startsWith("medium"));
 		if (hqPreview != undefined) {
 			pasteTemplateIntoImage(hqPreview, time, videoRef.current?.duration ?? 100);
 		}
@@ -303,6 +303,7 @@ export default function WatchScreen() {
 				setWatchProgress(progress);
 				setVideo(video);
 				video.previewFiles?.forEach(file => {
+					if (!file.template.startsWith("medium_")) return;
 					for (let i = 1; i <= file.frameCount; i++) {
 						const name = file.template.replace("%d", i.toString());
 						const img = new Image();
