@@ -85,8 +85,11 @@ export default function WatchScreen() {
 	const [activeSubtitle, setActiveSubtitle] = useState<SubtitleFile | null>(null);
 	const [pgs] = useState<PgsSubtitlePlayer>(new PgsSubtitlePlayer());
 	const [libass, setLibass] = useState<SubtitlesOctopus | null>(null);
+	const [controlsVisible, setControlsVisible] = useState(true);
+	const hideTimeoutRef = useRef<number | null>(null);
 
 	function togglePlay() {
+		showControls();
 		setOpenTab(null);
 		if (playing)
 			videoRef.current?.pause();
@@ -103,6 +106,7 @@ export default function WatchScreen() {
 	}
 
 	function adjustVolume(dir: number) {
+		showControls();
 		setOpenTab(null);
 		if (videoRef.current) {
 			if (dir > 0) {
@@ -131,6 +135,7 @@ export default function WatchScreen() {
 	}
 
 	function handleHotkey(e: KeyboardEvent) {
+		showControls();
 		let handled = true;
 		switch (e.code) {
 			case "KeyF":
@@ -217,6 +222,16 @@ export default function WatchScreen() {
 	function subtitleSupported(x: SubtitleFile) {
 		const keys = Object.keys(x.files);
 		return keys.includes("sup") || keys.includes("vtt") || keys.includes("ass") || keys.includes("ssa");
+	}
+
+	function showControls() {
+		setControlsVisible(true);
+
+		if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
+
+		hideTimeoutRef.current = setTimeout(() => {
+			setControlsVisible(false);
+		}, 5000);
 	}
 
 	// Loads the video info & last watch progress
@@ -373,8 +388,9 @@ export default function WatchScreen() {
 		else return <div>{JSON.stringify(error)}</div>;
 	}
 
-	return (<div className={"videoPlayer"}
+	return (<div className={`videoPlayer ${controlsVisible && "controls-visible"}`.trim()}
 	             tabIndex={0}
+				 onMouseMove={showControls}
 	             onKeyDown={handleHotkey}>
 			<div className={"videoPlayer-player"}
 			     onClick={togglePlay}

@@ -31,7 +31,7 @@
 
 .videoPlayer-info {
 	position: absolute;
-	top: 0;
+	top: -64px;
 	left: 0;
 	right: 0;
 
@@ -41,6 +41,15 @@
 	align-items: center;
 	padding: 8px 8px;
 	background-color: #0008;
+	transition-delay: 4.9s;
+	transition: top 100ms, opacity 100ms;
+	opacity: 0;
+}
+
+.videoPlayer.controls-visible .videoPlayer-info {
+	transition-delay: 0s;
+	top: 0;
+	opacity: 1;
 }
 
 .videoPlayer-title {
@@ -54,7 +63,7 @@
 
 .videoPlayer-controls {
 	position: absolute;
-	bottom: 0;
+	bottom: -64px;
 	left: 0;
 	right: 0;
 
@@ -64,6 +73,15 @@
 	align-items: center;
 	padding: 8px 8px;
 	background-color: #0008;
+	transition-delay: 4.9s;
+	transition: bottom 100ms, opacity 100ms;
+	opacity: 0;
+}
+
+.videoPlayer.controls-visible .videoPlayer-controls {
+	transition-delay: 0s;
+	bottom: 0;
+	opacity: 1;
 }
 
 .videoPlayer-button {
@@ -100,9 +118,21 @@
 	position: absolute;
 	left: 0;
 	right: 0;
-	bottom: 64px;
+	bottom: 0;
 	width: 100%;
+	height: 0;
+	overflow: hidden;
 	background: #fff2;
+	opacity: 0;
+	transition: bottom 100ms, height 1s 3s, opacity 1s 3s;
+}
+
+.videoPlayer.controls-visible .videoPlayer-scrubber {
+	transition-delay: 0s;
+	transition: all 100ms;
+	bottom: 64px;
+	height: 4px;
+	opacity: 1;
 }
 
 .videoPlayer-scrubber-bar {
