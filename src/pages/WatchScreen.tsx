@@ -1,7 +1,16 @@
 import "./WatchScreen.css";
-import {type JSX, type KeyboardEvent, type MouseEvent, type PointerEvent, type ReactNode, useEffect, useRef, useState} from "react";
+import {
+	type JSX,
+	type KeyboardEvent,
+	type MouseEvent,
+	type PointerEvent,
+	type ReactNode,
+	useEffect,
+	useRef,
+	useState
+} from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import type {PreviewFile, SubtitleFile, Video, WatchProgress} from "../api/types.ts";
+import type {PreviewFile, SubtitleFile, Video, VideoSegment, WatchProgress} from "../api/types.ts";
 import {client} from "../api/api.ts";
 import Hls, {type ErrorData} from "hls.js";
 import {
@@ -11,6 +20,7 @@ import {
 	MinimizeIcon,
 	PauseIcon,
 	PlayIcon,
+	SkipForwardIcon,
 	SpeechIcon,
 	Volume1Icon,
 	Volume2Icon,
@@ -123,6 +133,13 @@ function PlayerMenuItem(props: {
 	</div>)
 }
 
+function SkipButton(props: { label: string, onclick: () => void }) {
+	return <button className={"videoPlayer-skipButton"} onClick={props.onclick}>
+		<SkipForwardIcon/>
+		<span>{props.label}</span>
+	</button>
+}
+
 function toHhMmSs(timestamp: number) {
 	const hours = Math.floor(timestamp / 3600);
 	const minutes = Math.floor(timestamp / 60) % 60;
@@ -161,6 +178,7 @@ export default function WatchScreen() {
 	const scrubberCanvasCtxRef = useRef<CanvasRenderingContext2D>(null);
 	const scrubberTextRef = useRef<HTMLDivElement>(null);
 	const [imageCache, setImageCache] = useState<Record<string, HTMLImageElement>>({});
+	const [currentSegment, setCurrentSegment] = useState<VideoSegment | null>(null);
 
 	function togglePlay() {
 		showControls();
@@ -347,7 +365,8 @@ export default function WatchScreen() {
 					// Otherwise, keep on top of the cursor
 					: e.clientX - imgWidth;
 		scrubberRef.current.style.left = left + "px";
-		scrubberTextRef.current.innerText = toHhMmSs(time);
+		const hoveredSegment = getSegmentAt(time);
+		scrubberTextRef.current.innerText = hoveredSegment ? toHhMmSs(time) + "\n" + hoveredSegment.type : toHhMmSs(time);
 		const hqPreview = video?.previewFiles?.find(x => x.template.startsWith("medium"));
 		if (hqPreview != undefined) {
 			pasteTemplateIntoImage(hqPreview, time, videoRef.current?.duration ?? 100);
@@ -359,6 +378,15 @@ export default function WatchScreen() {
 		const newTime = (videoRef.current?.duration || 0) * (e.clientX / e.currentTarget.clientWidth);
 		videoRef.current.currentTime = newTime;
 		setTime(newTime);
+	}
+
+	function getSegmentAt(timestamp: number): VideoSegment | null {
+		for (const segment of video?.segments || []) {
+			if (timestamp * 1000 >= segment.startMilliseconds && timestamp * 1000 <= segment.endMilliseconds) {
+				return segment
+			}
+		}
+		return null;
 	}
 
 	// Loads the video info & last watch progress
@@ -528,18 +556,26 @@ export default function WatchScreen() {
 
 	// Save playback progress
 	useEffect(() => {
+		if (!video) return;
 		const intervalId = window.setInterval(async () => {
 			const currentTime = Math.floor((videoRef.current?.currentTime || 0) * 1000);
 			const duration = Math.floor((videoRef.current?.duration || 0) * 1000);
 			if (currentTime === 0 || duration === 0) return;
+			const endingSegment = video?.segments?.findLast(x => x.type == "Ending");
+			const endsAt = endingSegment ? endingSegment.startMilliseconds : duration * .95;
 
-			await client.updateWatchProgress(videoId!, duration, currentTime, null)
+			await client.updateWatchProgress(video.id, duration, currentTime, currentTime >= endsAt)
 		}, 5000);
 
 		return () => {
 			window.clearInterval(intervalId);
 		};
-	}, [videoId]);
+	}, [video]);
+
+	// Update the current segment
+	useEffect(() => {
+		setCurrentSegment(getSegmentAt(time));
+	}, [time]);
 
 	if (error) {
 		if (error instanceof Error) return <div>{error.message}</div>;
@@ -622,6 +658,13 @@ export default function WatchScreen() {
 							  }}></div>)
 					)}
 					<div className={"played"} style={{width: `${time / duration * 100}%`}}></div>
+					{video?.segments?.map(s =>
+						(<div className={`videoPlayer-segment-${s.type.toLowerCase()}`}
+						      style={{
+								  left: `${s.startMilliseconds / s.videoDuration * 100}%`,
+								  width: `${(s.endMilliseconds - s.startMilliseconds) / s.videoDuration * 100}%`
+							  }}></div>)
+					)}
 				</div>
 				<div className={"videoPlayer-scrubber-overlay"} ref={scrubberRef}>
 					<canvas ref={scrubberCanvasRef}/>
@@ -698,6 +741,13 @@ export default function WatchScreen() {
 				<PlayerButton icon={isFullscreen ? <MinimizeIcon/> : <MaximizeIcon/>}
 				              tooltip={isFullscreen ? "Exit Full Screen" : "Full Screen"} onclick={toggleFullscreen}/>
 			</div>
+			{currentSegment &&
+				<SkipButton
+					label={`Skip ${currentSegment.type}`}
+					onclick={() => {
+						videoRef.current!.currentTime = currentSegment.endMilliseconds / 1000
+					}}/>
+			}
 		</div>
 	)
 }

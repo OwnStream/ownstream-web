@@ -245,3 +245,48 @@
 	height: 100%;
 	background: #fff;
 }
+
+div[class^="videoPlayer-segment-"] {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	height: 100%;
+	background-color: #ff0000aa;
+	pointer-events: none;
+}
+
+.videoPlayer-segment-opening {
+	background-color: #00FFFFaa !important;
+}
+
+.videoPlayer-segment-ending {
+	background-color: #0202EDaa !important;
+}
+
+.videoPlayer-skipButton {
+	all: unset;
+	position: absolute;
+	right: 24px;
+	bottom: 20%;
+	font-size: 1.2rem;
+	background-color: #0009;
+	height: 48px;
+	border-radius: 24px;
+	padding: 0 16px;
+	display: flex;
+	flex-direction: row;
+	gap: 8px;
+	align-items: center;
+	transition: scale 100ms ease-in-out;
+	cursor: pointer;
+}
+
+.videoPlayer-skipButton:hover {
+	scale: 110%;
+	background-color: #ffff;
+	color: #000;
+}
+
+.videoPlayer-skipButton:active {
+	scale: 90%;
+}
