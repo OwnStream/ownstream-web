@@ -216,3 +216,32 @@
 	width: 100%;
 	height: auto;
 }
+
+.videoPlayer-volume-button {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	overflow-x: clip;
+	transition: width 100ms ease-in-out !important;
+	gap: 16px;
+}
+
+.videoPlayer-volume-button > svg {
+	flex-shrink: 0;
+}
+
+.videoPlayer-volume-button:hover {
+	width: 150px;
+}
+
+.videoPlayer-volume-bar {
+	flex-grow: 1;
+	width: 150px;
+	height: 4px;
+	background: #0009;
+}
+
+.videoPlayer-volume-bar > div {
+	height: 100%;
+	background: #fff;
+}

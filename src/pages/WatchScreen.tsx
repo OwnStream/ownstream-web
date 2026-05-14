@@ -1,5 +1,5 @@
 import "./WatchScreen.css";
-import {type JSX, type KeyboardEvent, type MouseEvent, type ReactNode, useEffect, useRef, useState} from "react";
+import {type JSX, type KeyboardEvent, type MouseEvent, type PointerEvent, type ReactNode, useEffect, useRef, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import type {PreviewFile, SubtitleFile, Video, WatchProgress} from "../api/types.ts";
 import {client} from "../api/api.ts";
@@ -24,6 +24,75 @@ import SubtitlesOctopus from "libass-wasm";
 function PlayerButton(props: { icon: JSX.Element, tooltip: string, onclick: () => void }) {
 	return (<div className={"videoPlayer-button"} title={props.tooltip} onClick={props.onclick}>
 		{props.icon}
+	</div>);
+}
+
+function PlayerVolumeButton(props: {
+	icon: JSX.Element,
+	tooltip: string,
+	volume: number,
+	onChange: (newVolume: number) => void,
+	onclick: () => void
+}) {
+	const barRef = useRef<HTMLDivElement | null>(null);
+
+	function setVolumeFromClientX(clientX: number) {
+		const bar = barRef.current;
+		if (!bar) return;
+
+		const rect = bar.getBoundingClientRect();
+		const rawVolume = (clientX - rect.left) / rect.width;
+		const newVolume = Math.max(0, Math.min(1, rawVolume));
+
+		props.onChange(newVolume);
+	}
+
+	function handleVolumeClick(e: MouseEvent<HTMLDivElement>) {
+		const bar = barRef.current;
+		if (!bar) return;
+
+		const parentRect = bar.parentElement!.getBoundingClientRect();
+
+		if (e.clientX - parentRect.left < 48) {
+			props.onclick();
+		} else {
+			setVolumeFromClientX(e.clientX);
+		}
+	}
+
+	function handleVolumePointerDown(e: PointerEvent<HTMLDivElement>) {
+		const bar = barRef.current;
+		if (!bar) return;
+
+		const parentRect = bar.parentElement!.getBoundingClientRect();
+
+		if (e.clientX - parentRect.left < 48) return;
+
+		e.preventDefault();
+		e.currentTarget.setPointerCapture(e.pointerId);
+		setVolumeFromClientX(e.clientX);
+
+		function handlePointerMove(event: globalThis.PointerEvent) {
+			setVolumeFromClientX(event.clientX);
+		}
+
+		function handlePointerUp() {
+			document.removeEventListener("pointermove", handlePointerMove);
+			document.removeEventListener("pointerup", handlePointerUp);
+		}
+
+		document.addEventListener("pointermove", handlePointerMove);
+		document.addEventListener("pointerup", handlePointerUp);
+	}
+
+	return (<div className={"videoPlayer-button videoPlayer-volume-button"}
+	             title={props.tooltip}
+	             onClick={handleVolumeClick}
+	             onPointerDown={handleVolumePointerDown}>
+		{props.icon}
+		<div className={"videoPlayer-volume-bar"} ref={barRef}>
+			<div style={{width: (props.volume * 100) + "%"}}></div>
+		</div>
 	</div>);
 }
 
@@ -548,10 +617,15 @@ export default function WatchScreen() {
 				<PlayerButton icon={playing ? <PauseIcon/> : <PlayIcon/>}
 				              tooltip={playing ? "Pause" : "Play"}
 				              onclick={togglePlay}/>
-				<PlayerButton
+				<PlayerVolumeButton
 					icon={volume > .7 ? <Volume2Icon/> : volume > .2 ? <Volume1Icon/> : volume > 0 ? <VolumeIcon/> :
 						<VolumeXIcon/>}
-					tooltip={"Mute"} onclick={toggleMuted}/>
+					tooltip={"Mute"}
+					volume={volume}
+					onChange={x => {
+						if (videoRef.current) videoRef.current.volume = x;
+					}}
+					onclick={toggleMuted}/>
 				<div className={"videoPlayer-currentTime"}>{toHhMmSs(time)}</div>
 				<span>/</span>
 				<div className={"videoPlayer-duration"}>{toHhMmSs(duration)}</div>
