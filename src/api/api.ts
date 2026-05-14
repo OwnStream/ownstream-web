@@ -33,7 +33,12 @@ class OwnStreamApiClient {
 			body: body ? JSON.stringify(body) : undefined,
 		});
 		if (response.status >= 200 || response.status < 300) {
-			return response.status == 204 ? Promise.resolve({} as T) : await response.json();
+			const r = await response.text()
+			try {
+				return JSON.parse(r);
+			} catch (e) {
+				return {} as T;
+			}
 		} else {
 			throw new Error(`[${response.statusText}] ${await response.text()}`);
 		}
@@ -63,8 +68,8 @@ class OwnStreamApiClient {
 		return await this.request<Season[]>(`api/content/${id}/seasons`);
 	}
 
-	async getContentEpisodes(id: string, seasons: number): Promise<Episode[]> {
-		return await this.request<Episode[]>(`api/content/${id}/seasons/${seasons}/episodes`);
+	async getContentEpisodes(id: string, season: number): Promise<Episode[]> {
+		return await this.request<Episode[]>(`api/content/${id}/seasons/${season}/episodes`);
 	}
 
 	async getEpisode(id: string): Promise<Episode> {
@@ -113,7 +118,7 @@ class OwnStreamApiClient {
 	}
 
 	async upNext(id: string): Promise<EpisodeToWatch> {
-		return await this.request<EpisodeToWatch>(`api/progress/${id}/upNext`);
+		return await this.request<EpisodeToWatch>(`api/progress/upNext/${id}`);
 	}
 
 	async getConfig(): Promise<Configuration> {

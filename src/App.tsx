@@ -21,6 +21,7 @@ import WebhooksSettings from "./pages/settings/Webhooks.tsx";
 import CreateWebhook from "./pages/settings/NewWebhook.tsx";
 import EditWebhook from "./pages/settings/EditWebhook.tsx";
 import JobsTab from "./pages/settings/Jobs.tsx";
+import ContentPage from "./pages/Content.tsx";
 
 export default function App() {
 	return (
@@ -53,6 +54,7 @@ function AppRoutes() {
 				}
 			>
 				<Route path="/" element={<Home/>}/>
+				<Route path="/content/:contentId" element={<ContentPage/>}/>
 				<Route path="/watch/:videoId" element={<WatchScreen/>}/>
 				<Route path="/serverSettings" element={<Settings/>}>
 					<Route path="transcode" element={<TranscodingSettings/>}/>

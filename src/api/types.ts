@@ -50,7 +50,7 @@ export type Episode = {
 export type EpisodeToWatch = {
 	continueWatching: Episode | null,
 	progress: number | null,
-	upNext: number | null
+	upNext: Episode | null
 }
 export type Job = {
 	id: string,

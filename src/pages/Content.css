@@ -1,0 +1,91 @@
+.contentPage {
+}
+
+.contentPage .backdrop {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	filter: blur(5px) brightness(30%);
+	z-index: -1;
+	object-fit: cover;
+}
+
+.contentPage-poster {
+	z-index: 2;
+	position: sticky;
+	top: 140px;
+	margin: -128px 50px 16px;
+	width: 250px;
+	height: 375px;
+	display: block;
+	color: #0000;
+	background: #fff5;
+}
+
+.contentPage-info {
+	--padding-left: 350px;
+}
+
+.contentPage-strip {
+	position: sticky;
+	top: 64px;
+	width: 100vw;
+	height: 64px;
+	display: flex;
+	align-items: center;
+	background-color: #555;
+	padding-left: var(--padding-left);
+	overflow-x: scroll;
+}
+
+.contentPage-strip > a {
+	flex-shrink: 0;
+	all: unset;
+	padding: 0 32px;
+	height: 100%;
+	cursor: pointer;
+	transition: background-color 100ms ease-in-out;
+	display: flex;
+	align-items: center;
+	white-space: nowrap;
+}
+
+.contentPage-strip > a:hover {
+	background-color: #fff5;
+}
+
+.contentPage-meta {
+	background-color: #333;
+	padding-left: var(--padding-left);
+	padding-right: 32px;
+	padding-bottom: 16px;
+	min-height: calc(100vh - 500px);
+}
+
+.contentPage.movie .contentPage-meta {
+	min-height: calc(100vh - 391px) !important;
+}
+
+.contentPage-meta .title {
+	margin: 0;
+	padding: 16px 0;
+}
+
+.contentPage-meta .subtitle {
+	margin-top: -12px;
+	margin-bottom: 12px;
+}
+
+.contentPage-meta .tagline {
+	font-size: 1.1rem;
+}
+
+.contentPage-meta .description {
+	max-width: 700px;
+}
+
+.contentPage .shelf {
+	margin-top: 20px;
+}
