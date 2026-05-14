@@ -32,8 +32,8 @@ class OwnStreamApiClient {
 			method: method ? method : body ? "POST" : "GET",
 			body: body ? JSON.stringify(body) : undefined,
 		});
-		if (response.status === 200) {
-			return await response.json();
+		if (response.status >= 200 || response.status < 300) {
+			return response.status == 204 ? Promise.resolve({} as T) : await response.json();
 		} else {
 			throw new Error(`[${response.statusText}] ${await response.text()}`);
 		}

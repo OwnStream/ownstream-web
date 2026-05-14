@@ -526,6 +526,21 @@ export default function WatchScreen() {
 			scrubberCanvasCtxRef.current = scrubberCanvasRef.current.getContext("2d");
 	}, [scrubberCanvasRef]);
 
+	// Save playback progress
+	useEffect(() => {
+		const intervalId = window.setInterval(async () => {
+			const currentTime = Math.floor((videoRef.current?.currentTime || 0) * 1000);
+			const duration = Math.floor((videoRef.current?.duration || 0) * 1000);
+			if (currentTime === 0 || duration === 0) return;
+
+			await client.updateWatchProgress(videoId!, duration, currentTime, null)
+		}, 5000);
+
+		return () => {
+			window.clearInterval(intervalId);
+		};
+	}, [videoId]);
+
 	if (error) {
 		if (error instanceof Error) return <div>{error.message}</div>;
 		else return <div>{JSON.stringify(error)}</div>;
