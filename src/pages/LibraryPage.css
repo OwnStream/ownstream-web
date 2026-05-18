@@ -1,0 +1,49 @@
+.libraryPage {
+	padding: 16px 64px;
+}
+
+@media screen and (max-width: 1000px) {
+	.libraryPage {
+		padding: 16px;
+	}
+}
+
+.libraryPills {
+	display: flex;
+	gap: 12px;
+	padding: 8px 0;
+	align-items: center;
+}
+
+.vr {
+	align-self: stretch;
+	width: 1px;
+	background-color: #777;
+	margin: 0 8px;
+}
+
+.libraryPill {
+	padding: 8px 16px;
+	background-color: #555;
+	border-radius: 16px;
+	transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out, scale 0.1s ease-in-out;
+	cursor: pointer;
+}
+
+.libraryPill:hover, .libraryPill:focus {
+	scale: 110%;
+	background-color: #fff;
+	color: #000;
+}
+
+.libraryPill.active {
+	background-color: #fff;
+	color: #000;
+}
+
+.libraryContents {
+	overflow: visible !important;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	gap: 8px;
+}

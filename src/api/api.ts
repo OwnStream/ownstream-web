@@ -203,8 +203,21 @@ class OwnStreamApiClient {
 		return await this.request<SuccessResponse<void>>(`api/manage/webhooks/${id}`, undefined, "DELETE");
 	}
 
-	async getOrphanVideos() {
+	async getOrphanVideos(): Promise<Video[]> {
 		return await this.request<Video[]>(`api/video/orphaned`);
+	}
+
+	async getContentLibraries(): Promise<Library[]> {
+		return await this.request<Library[]>(`api/content/library`);
+	}
+
+	async getLibraryContents(libraryId: string | undefined, contentType: "Movie" | "Tv" | undefined, page: number = 0, limit: number = 40): Promise<PagedResponse<Content>> {
+		const query = new URLSearchParams();
+		if (contentType)
+			query.set("typeFilter", contentType);
+		query.set("page", page.toString());
+		query.set("limit", limit.toString());
+		return await this.request<PagedResponse<Content>>(`api/content/library/${libraryId || "00000000-0000-0000-0000-000000000000"}?${query}`);
 	}
 
 	getMediaUrl(id: string, dir?: string, file: string = "master.m3u8"): string {

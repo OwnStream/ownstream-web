@@ -23,6 +23,7 @@ import EditWebhook from "./pages/settings/EditWebhook.tsx";
 import JobsTab from "./pages/settings/Jobs.tsx";
 import ContentPage from "./pages/Content.tsx";
 import OrphanVideos from "./pages/settings/OrphanVideos.tsx";
+import LibraryPage from "./pages/LibraryPage.tsx";
 
 export default function App() {
 	return (
@@ -55,6 +56,7 @@ function AppRoutes() {
 				}
 			>
 				<Route path="/" element={<Home/>}/>
+				<Route path="/library" element={<LibraryPage/>}/>
 				<Route path="/content/:contentId" element={<ContentPage/>}/>
 				<Route path="/watch/:videoId" element={<WatchScreen/>}/>
 				<Route path="/serverSettings" element={<Settings/>}>

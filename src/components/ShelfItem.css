@@ -3,6 +3,7 @@
 	overflow: visible;
 	cursor: pointer;
 	flex-shrink: 0;
+	outline: none;
 }
 
 .shelfItem:hover {
@@ -24,6 +25,7 @@
 	object-fit: cover;
 }
 
+.shelfItem:focus .shelfItem-thumbnail,
 .shelfItem:hover .shelfItem-thumbnail {
 	border: 4px solid white;
 	scale: 105%;

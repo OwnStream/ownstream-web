@@ -9,7 +9,7 @@ type ShelfItemProps = {
 export default function ShelfItem({item}: ShelfItemProps) {
 	const navigate = useNavigate();
 	return (
-		<div className={["shelfItem", item.type == "episode" ? "shelfItem-landscape" : "shelfItem-portrait"].join(" ")}
+		<div tabIndex={0} className={["shelfItem", item.type == "episode" ? "shelfItem-landscape" : "shelfItem-portrait"].join(" ")}
 		     key={item.id + item.episodeId + item.videoId}
 		onClick={() => {
 			switch (item.type) {
