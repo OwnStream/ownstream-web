@@ -1,6 +1,6 @@
 import "./Settings.css";
 import {NavLink, Outlet} from "react-router-dom";
-import {CpuIcon, FileVideoCameraIcon, FolderIcon, GpuIcon, UsersIcon, WebhookIcon} from "lucide-react";
+import {CpuIcon, FileVideoCameraIcon, FileVideoIcon, FolderIcon, GpuIcon, UsersIcon, WebhookIcon} from "lucide-react";
 
 
 export default function Settings() {
@@ -13,6 +13,7 @@ export default function Settings() {
 				<NavLink to={"libraries"} className={"settingsCategory"}><FolderIcon/><span>Libraries</span></NavLink>
 				<NavLink to={"webhooks"} className={"settingsCategory"}><WebhookIcon/><span>Webhooks</span></NavLink>
 				<NavLink to={"jobs"} className={"settingsCategory"}><CpuIcon/><span>Jobs</span></NavLink>
+				<NavLink to={"orphanVideos"} className={"settingsCategory"}><FileVideoIcon/><span>Orphaned Videos</span></NavLink>
 			</div>
 			<div className={"settingsItems"}>
 				<Outlet/>

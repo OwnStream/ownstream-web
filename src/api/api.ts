@@ -203,6 +203,10 @@ class OwnStreamApiClient {
 		return await this.request<SuccessResponse<void>>(`api/manage/webhooks/${id}`, undefined, "DELETE");
 	}
 
+	async getOrphanVideos() {
+		return await this.request<Video[]>(`api/video/orphaned`);
+	}
+
 	getMediaUrl(id: string, dir?: string, file: string = "master.m3u8"): string {
 		if (dir)
 			return `${this.baseUrl}/Media/${id}/${dir}/${file}`;
