@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {client} from "../../api/api.ts";
 import type {Video} from "../../api/types.ts";
 import CircleButton from "../../components/CircleButton.tsx";
-import {PlayIcon, TrashIcon} from "lucide-react";
+import {PlayIcon} from "lucide-react";
 import {NavLink} from "react-router-dom";
 
 export default function OrphanVideos() {
