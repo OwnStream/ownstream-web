@@ -14,6 +14,10 @@ body {
 	user-select: none;
 }
 
+code {
+	user-select: all;
+}
+
 .selectable {
 	user-select: text;
 }

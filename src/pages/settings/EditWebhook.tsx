@@ -53,6 +53,11 @@ export default function EditWebhook() {
 		<p className={"settingsInput-info"}>
 			Deletes the input files after OwnStream finishes transcoding & imports it into its own library.
 		</p>
+		<p>URL:</p>
+		<ul>
+			<li><b>Radarr: </b> <code>{client.baseUrl}/api/webhook/{webhook.id}/radarr</code></li>
+			<li><b>Sonarr: </b> <code>{client.baseUrl}/api/webhook/{webhook.id}/sonarr</code></li>
+		</ul>
 		<button onClick={async () => {
 			const res = await client.modifyWebhook(webhook.id, webhook.name, undefined, webhook.deleteOnConvert, webhook.id);
 			if (!res.success) {
