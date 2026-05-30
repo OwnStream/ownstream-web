@@ -11,6 +11,7 @@ type AuthContextValue = {
   logout: () => void;
   switchAccount: (userId: string) => Promise<void>;
   removeAccount: (userId: string) => void;
+  showSettings: () => boolean;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);

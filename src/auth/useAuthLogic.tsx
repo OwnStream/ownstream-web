@@ -121,5 +121,31 @@ export function useAuthLogic() {
 		saveAccounts(newAccounts);
 	}
 
-	return {status, user, accounts, login, logout, switchAccount, removeAccount};
+	const showSettings = () => {
+		const permissions = user?.permissions;
+		if (!permissions) return false;
+		const requiredPerms = [
+			"Owner",
+			"Admin",
+			"ReadJobs",
+			"WriteJobs",
+			"ReadWebhooks",
+			"WriteWebhooks",
+			"WriteContent",
+			"WriteLibraries",
+			"WriteVideos",
+			"ReadAllUsers",
+			"WriteUsers",
+			"ReadSettings",
+			"WriteSettings",
+		];
+		for (const requiredPerm of requiredPerms) {
+			if (permissions.includes(requiredPerm)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	return {status, user, accounts, login, logout, switchAccount, removeAccount, showSettings};
 }
