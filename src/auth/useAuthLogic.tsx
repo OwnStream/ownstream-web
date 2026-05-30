@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {client} from "../api/api";
+import {ApiError, client} from "../api/api";
 import type {User, LoginResponse} from "../api/types";
 import {
 	clearLastUsedAccountId,
@@ -9,7 +9,7 @@ import {
 	saveLastUsedAccountId,
 } from "./authStorage";
 
-type AuthStatus = "loading" | "loggedIn" | "loggedOut";
+export type AuthStatus = "loading" | "loggedIn" | "loggedOut" | "requireSetup" | "inaccessible";
 
 export function useAuthLogic() {
 	const [status, setStatus] = useState<AuthStatus>("loading");
@@ -17,36 +17,55 @@ export function useAuthLogic() {
 	const [accounts, setAccounts] = useState(() => loadAccounts());
 
 	useEffect(() => {
-		const savedAccounts = loadAccounts();
-		const activeUserId = loadLastUsedAccountId();
+		(async () => {
+			try {
+				const info = await client.getInfo();
+				if (!info.setupComplete) {
+					setStatus("requireSetup");
+					return;
+				}
+			} catch (e) {
+				setStatus("inaccessible")
+				return;
+			}
 
-		const activeAccount =
-			savedAccounts.find((account) => account.user.id === activeUserId) ??
-			savedAccounts[0];
+			const savedAccounts = loadAccounts();
+			const activeUserId = loadLastUsedAccountId();
 
-		if (!activeAccount) {
-			setStatus("loggedOut");
-			return;
-		}
+			const activeAccount =
+				savedAccounts.find((account) => account.user.id === activeUserId) ??
+				savedAccounts[0];
 
-		client.setToken(activeAccount.token);
+			if (!activeAccount) {
+				setStatus("loggedOut");
+				return;
+			}
 
-		client
-			.whoAmI()
-			.then((me) => {
+			client.setToken(activeAccount.token);
+
+			try {
+				const me = await client.whoAmI();
 				setUser(me);
 				setStatus("loggedIn");
-			})
-			.catch(() => {
-				const remaining = savedAccounts.filter(
-					(account) => account.user.id !== activeAccount.user.id,
-				);
-				saveAccounts(remaining);
-				clearLastUsedAccountId();
-				setAccounts(remaining);
-				setUser(null);
-				setStatus("loggedOut");
-			});
+			} catch (e) {
+				if (e instanceof ApiError) {
+					if (e.status === 401) {
+						const remaining = savedAccounts.filter(
+							(account) => account.user.id !== activeAccount.user.id,
+						);
+						saveAccounts(remaining);
+						clearLastUsedAccountId();
+						setAccounts(remaining);
+						setUser(null);
+						setStatus("loggedOut");
+					}
+				} else {
+					clearLastUsedAccountId();
+					setUser(null);
+					setStatus("loggedOut");
+				}
+			}
+		})();
 	}, []);
 
 	const login = async (username: string, password: string) => {

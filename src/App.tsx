@@ -24,6 +24,7 @@ import JobsTab from "./pages/settings/Jobs.tsx";
 import ContentPage from "./pages/Content.tsx";
 import OrphanVideos from "./pages/settings/OrphanVideos.tsx";
 import LibraryPage from "./pages/LibraryPage.tsx";
+import SetupScreen from "./pages/SetupScreen.tsx";
 
 export default function App() {
 	return (
@@ -47,6 +48,7 @@ function AppRoutes() {
 			<Route path="/login" element={<Login/>}/>
 			<Route path="/splash" element={<SplashScreen/>}/>
 			<Route path="/profiles" element={<Profiles/>}/>
+			<Route path="/setup" element={<SetupScreen/>}/>
 
 			<Route
 				element={
@@ -82,8 +84,21 @@ function AppRoutes() {
 function ProtectedRoute({children}: { children: ReactNode }) {
 	const {status} = useAuth();
 
-	if (status === "loading") return <SplashScreen/>;
-	if (status === "loggedOut") return <Navigate to="/login" replace/>;
-
-	return <>{children}</>;
+	switch (status) {
+		case "loading": {
+			return <SplashScreen/>;
+		}
+		case "loggedIn": {
+			return <>{children}</>;
+		}
+		case "loggedOut": {
+			return <Navigate to="/login" replace/>;
+		}
+		case "requireSetup": {
+			return <Navigate to="/setup" replace/>;
+		}
+		case "inaccessible": {
+			return <>Server inaccessible</>;
+		}
+	}
 }

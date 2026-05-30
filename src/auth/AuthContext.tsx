@@ -1,10 +1,10 @@
 import { createContext, useContext } from "react";
 import type { ReactNode } from "react";
 import type { User } from "../api/types";
-import { useAuthLogic } from "./useAuthLogic";
+import {type AuthStatus, useAuthLogic} from "./useAuthLogic";
 
 type AuthContextValue = {
-  status: "loading" | "loggedIn" | "loggedOut";
+  status: AuthStatus;
   user: User | null;
   accounts: { user: User; token: string }[];
   login: (username: string, password: string) => Promise<void>;

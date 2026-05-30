@@ -1,7 +1,7 @@
 import type {
 	Content,
 	Episode,
-	EpisodeToWatch,
+	EpisodeToWatch, InstanceInfo,
 	Job, Library,
 	LoginResponse,
 	PagedResponse,
@@ -12,6 +12,20 @@ import type {
 	WatchProgress, Webhook
 } from './types';
 import type {Configuration} from "./configTypes.ts";
+
+class ApiError implements Error {
+	status: number;
+	data: string | object;
+	message: string;
+	name: string;
+
+	constructor(message: string, status: number, data: string | object) {
+		this.message = message;
+		this.name = "ApiError";
+		this.status = status;
+		this.data = data;
+	}
+}
 
 // noinspection JSUnusedGlobalSymbols
 class OwnStreamApiClient {
@@ -32,7 +46,7 @@ class OwnStreamApiClient {
 			method: method ? method : body ? "POST" : "GET",
 			body: body ? JSON.stringify(body) : undefined,
 		});
-		if (response.status >= 200 || response.status < 300) {
+		if (response.status >= 200 && response.status < 300) {
 			const r = await response.text()
 			try {
 				return JSON.parse(r);
@@ -40,7 +54,14 @@ class OwnStreamApiClient {
 				return {} as T;
 			}
 		} else {
-			throw new Error(`[${response.statusText}] ${await response.text()}`);
+			const resp = await response.text();
+			let data;
+			try {
+				data = JSON.parse(resp);
+			} catch (e) {
+				data = resp;
+			}
+			throw new ApiError(`[${response.status}] ${resp}`, response.status, data);
 		}
 	}
 
@@ -54,6 +75,10 @@ class OwnStreamApiClient {
 
 	async whoAmI(): Promise<User> {
 		return await this.request<User>("api/auth/whoami");
+	}
+
+	async getInfo(): Promise<InstanceInfo> {
+		return await this.request<InstanceInfo>("api/info");
 	}
 
 	async getHomeShelves(): Promise<Shelf[]> {
@@ -139,6 +164,10 @@ class OwnStreamApiClient {
 
 	async createUser(username: string, password: string): Promise<User> {
 		return await this.request<User>(`api/manage/users/new`, {username, password});
+	}
+
+	async createSetupUser(username: string, password: string): Promise<User> {
+		return await this.request<User>(`api/manage/users/setupNew`, {username, password});
 	}
 
 	async getUser(id: string): Promise<User> {
@@ -228,5 +257,5 @@ class OwnStreamApiClient {
 	}
 }
 
-export {OwnStreamApiClient};
+export {OwnStreamApiClient, ApiError};
 export const client = new OwnStreamApiClient("http://localhost:5165");

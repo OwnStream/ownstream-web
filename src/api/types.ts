@@ -52,6 +52,12 @@ export type EpisodeToWatch = {
 	progress: number | null,
 	upNext: Episode | null
 }
+export type InstanceInfo = {
+	name: string,
+	type: string,
+	version: string,
+	setupComplete: boolean
+}
 export type Job = {
 	id: string,
 	jobType: string,

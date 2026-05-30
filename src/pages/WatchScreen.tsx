@@ -622,7 +622,7 @@ export default function WatchScreen() {
 								key={x.id}
 								kind="captions"
 								srcLang={x.language}
-								label={x.title}
+								label={x.title || x.language || `Subtitle #${x.id}`}
 								src={client.getMediaUrl(videoId!, "captions", x.files["vtt"])}/>
 						))}
 				</video>
@@ -707,9 +707,14 @@ export default function WatchScreen() {
 								active={activeSubtitle === null}/>
 							{video?.subtitles
 								?.filter(subtitleSupported)
+								?.sort((a,b) => {
+									const titleA = a.title || a.language || `Subtitle #${a.id.toString().padStart(2, '0')}`;
+									const titleB = b.title || b.language || `Subtitle #${b.id.toString().padStart(2, '0')}`;
+									return titleA.localeCompare(titleB);
+								})
 								?.map(x => (
 									<PlayerMenuItem
-										label={x.title}
+										label={x.title || x.language || `Subtitle #${x.id}`}
 										onclick={() => {
 											setOpenTab(null);
 											setActiveSubtitle(x);
