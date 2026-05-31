@@ -27,7 +27,7 @@ jobs:
         run: npm run build -- --sourcemap
 
       - name: Compress the app
-        run: zip -r dist.zip dist/*
+        run: cd dist && zip -r ../dist.zip .
 
       - name: Generate suffix
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
