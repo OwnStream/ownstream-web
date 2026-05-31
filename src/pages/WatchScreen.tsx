@@ -31,6 +31,8 @@ import PgsSubtitlePlayer from "../pgs";
 // @ts-expect-error libass-wasm does not come with TypeScript definitions
 import SubtitlesOctopus from "libass-wasm";
 
+const LIBASS_BASE_URL = `${import.meta.env.BASE_URL}libass/`;
+
 function PlayerButton(props: { icon: JSX.Element, tooltip: string, onclick: () => void }) {
 	return (<div className={"videoPlayer-button"} title={props.tooltip} onClick={props.onclick}>
 		{props.icon}
@@ -510,8 +512,8 @@ export default function WatchScreen() {
 				setLibass(new SubtitlesOctopus({
 					canvas: canvasRef.current,
 					subUrl: client.getMediaUrl(videoId!, "captions", activeSubtitle!.files["ass"] || activeSubtitle!.files["ssa"]),
-					workerUrl: "/node_modules/libass-wasm/dist/js/subtitles-octopus-worker.js",
-					legacyWorkerUrl: "/node_modules/libass-wasm/dist/js/subtitles-octopus-worker-legacy.js",
+					workerUrl: `${LIBASS_BASE_URL}subtitles-octopus-worker.js`,
+					legacyWorkerUrl: `${LIBASS_BASE_URL}subtitles-octopus-worker-legacy.js`,
 					fallbackFont: "/assets/fonts/noto_sans/NotoSans-VariableFont_wdth,wght.ttf",
 					fonts: video?.attachments?.map(x => client.getMediaUrl(videoId!, "attachments", x))
 				}));
