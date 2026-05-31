@@ -258,4 +258,5 @@ class OwnStreamApiClient {
 }
 
 export {OwnStreamApiClient, ApiError};
-export const client = new OwnStreamApiClient("http://localhost:5165");
+// @ts-expect-error idk how to fix this one :(
+export const client = new OwnStreamApiClient(window["instanceBase"]);
