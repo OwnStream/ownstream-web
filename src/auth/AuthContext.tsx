@@ -7,6 +7,7 @@ type AuthContextValue = {
   status: AuthStatus;
   user: User | null;
   accounts: { user: User; token: string }[];
+  retry: () => Promise<void>;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
   switchAccount: (userId: string) => Promise<void>;

@@ -56,10 +56,15 @@ button {
 	cursor: pointer;
 }
 
-button:hover {
+button[disabled] {
+	background-color: #226;
+	cursor: not-allowed;
+}
+
+button:hover:not([disabled]) {
 	background-color: #88f;
 }
 
-button:active {
+button:active:not([disabled]) {
 	background-color: #44f;
 }

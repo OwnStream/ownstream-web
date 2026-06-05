@@ -25,6 +25,7 @@ import ContentPage from "./pages/Content.tsx";
 import OrphanVideos from "./pages/settings/OrphanVideos.tsx";
 import LibraryPage from "./pages/LibraryPage.tsx";
 import SetupScreen from "./pages/SetupScreen.tsx";
+import ServerInaccessibleScreen from "./pages/ServerInaccessibleScreen.tsx";
 
 export default function App() {
 	return (
@@ -98,7 +99,7 @@ function ProtectedRoute({children}: { children: ReactNode }) {
 			return <Navigate to="/setup" replace/>;
 		}
 		case "inaccessible": {
-			return <>Server inaccessible</>;
+			return <ServerInaccessibleScreen/>;
 		}
 	}
 }
