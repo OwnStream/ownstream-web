@@ -259,4 +259,4 @@ class OwnStreamApiClient {
 
 export {OwnStreamApiClient, ApiError};
 // @ts-expect-error idk how to fix this one :(
-export const client = new OwnStreamApiClient(window["instanceBase"]);
+export const client = new OwnStreamApiClient(window["instanceBase"] || "/");
