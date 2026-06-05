@@ -1,7 +1,6 @@
 .shelf {
 	display: flex;
 	flex-direction: column;
-	gap: 16px;
 }
 
 .shelf-header {
@@ -29,4 +28,10 @@
 	overflow-x: scroll;
 	overflow-y: visible;
 	padding: 0 32px 16px;
+}
+
+@media (max-width: 800px) {
+	.shelf-header-title {
+		font-size: 1.25em;
+	}
 }

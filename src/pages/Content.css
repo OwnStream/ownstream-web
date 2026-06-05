@@ -24,8 +24,21 @@
 	background: #fff5;
 }
 
+@media (max-width: 800px) {
+	.contentPage-poster {
+		position: unset;
+		margin: 96px auto 16px;
+	}
+}
+
 .contentPage-info {
 	--padding-left: 350px;
+}
+
+@media (max-width: 800px) {
+	.contentPage-info {
+		--padding-left: 16px;
+	}
 }
 
 .contentPage-strip {

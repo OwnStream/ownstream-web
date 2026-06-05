@@ -44,6 +44,28 @@
 	width: 384px;
 }
 
+@media (max-width: 800px) {
+	.shelfItem-portrait {
+		width: 100px;
+	}
+
+	.shelfItem-landscape {
+		width: 267px;
+	}
+
+	.shelfItem-thumbnail {
+		height: 150px;
+	}
+
+	.shelfItem-title {
+		font-size: .85rem;
+	}
+
+	.shelfItem-subtitle {
+		font-size: .75rem;
+	}
+}
+
 .shelfItem-progress {
 	position: absolute;
 	bottom: 0;
