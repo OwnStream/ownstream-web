@@ -1,5 +1,7 @@
 .app-root {
-
+	--nav-size-left: 200px;
+	--nav-size-bottom: 0px;
+	--gradient-dir: to right;
 }
 
 .app-root__header {
@@ -24,20 +26,91 @@
 	font-weight: bold;
 }
 
-.app-root__header__link {
+.app-root__nav {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: var(--nav-size-left);
+	background: linear-gradient(var(--gradient-dir), #000, #0000);
+	padding-top: 64px;
+	display: flex;
+	flex-direction: column;
+}
+
+.app-root__nav__link {
+	--bgc: #0000;
+	padding: 12px 16px;
 	text-decoration: none;
 	color: #aaa;
-	transition: color 0.2s ease-in-out;
+	transition: color 0.2s ease-in-out, --bgc 0.2s ease-in-out;
+	display: flex;
+	gap: 16px;
+	background: linear-gradient(var(--gradient-dir), var(--bgc), #0000);
 }
 
-.app-root__header__link:hover {
+@media screen and (max-width: 1000px) and (min-width: 600px) {
+	.app-root {
+		--nav-size-left: 64px;
+		--nav-size-bottom: 0px;
+	}
+
+	.app-root__nav__link > span {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.app-root {
+		--nav-size-left: 0px;
+		--nav-size-bottom: 64px;
+		--gradient-dir: to top;
+	}
+
+	.app-root__nav {
+		position: fixed;
+		top: unset;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: var(--nav-size-bottom);
+		background: linear-gradient(var(--gradient-dir), #000, #000, #0000);
+		width: 100vw;
+		padding-top: 0;
+		z-index: 1000;
+		justify-content: space-evenly;
+		flex-direction: row;
+	}
+
+	.app-root__nav__link {
+		flex-direction: column;
+		height: 100%;
+		width: 100%;
+		text-align: center;
+		padding: 8px 0;
+		gap: 0;
+		align-items: center;
+	}
+
+	.app-root__nav__link > span {
+		font-size: .8rem;
+	}
+}
+
+.app-root__nav__link:hover {
 	color: #ccc;
+	--bgc: #ccc5;
 }
 
-.app-root__header__link.active {
+.app-root__nav__link.active {
 	color: #fff;
 }
 
 .app-root__main {
 	margin-top: 64px;
+}
+
+.app-root__main.hasNav {
+	margin-left: var(--nav-size-left);
+	margin-bottom: var(--nav-size-bottom);
 }
