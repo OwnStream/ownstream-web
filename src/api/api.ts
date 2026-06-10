@@ -6,7 +6,7 @@ import type {
 	LoginResponse,
 	PagedResponse,
 	Season,
-	Shelf, SuccessResponse,
+	ShelfItem, SuccessResponse,
 	User,
 	Video,
 	WatchProgress, Webhook
@@ -81,8 +81,8 @@ class OwnStreamApiClient {
 		return await this.request<InstanceInfo>("api/info");
 	}
 
-	async getHomeShelves(): Promise<Shelf[]> {
-		return await this.request<Shelf[]>("api/home/shelves");
+	async getHomeShelfById(id: string): Promise<ShelfItem[]> {
+		return await this.request<ShelfItem[]>(`api/home/${id}`);
 	}
 
 	async getContentDetails(id: string): Promise<Content> {
