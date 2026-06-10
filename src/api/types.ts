@@ -100,6 +100,26 @@ export type PreviewFile = {
 	columns: number,
 	period: number | null
 }
+export type QuickLoginAuthorizeResponse = {
+	tokenValid: boolean,
+	deviceName?: string,
+	signedIn: boolean,
+}
+export type QuickLoginCheckResponse = {
+	tokenValid: boolean,
+	loginComplete: boolean,
+	signInResult?: string,
+}
+export type QuickLoginStartResponse = {
+	deviceName: string,
+	token: string,
+	code: string,
+}
+export type QuickLoginSession = {
+	deviceName: string,
+	code: string,
+	expiresAt: string,
+}
 export type Season = {
 	index: number,
 	episodeCount: number

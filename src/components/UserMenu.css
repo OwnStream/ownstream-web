@@ -1,3 +1,12 @@
+.usermenu_bg {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: #0002;
+}
+
 .app-root__header__usermenu {
 	position: absolute;
 	z-index: 9999;
@@ -5,6 +14,9 @@
 	right: 0px;
 	min-width: 200px;
 	background-color: #0009;
+	border: 1px solid #555F;
+	border-top: none;
+	border-right: none;
 }
 
 .usermenu__profiles {
@@ -48,6 +60,9 @@
 }
 
 .usermenu__profiles__link {
+	all: unset;
+	width: 100%;
+	cursor: pointer;
 	display: block;
 	text-decoration: none;
 	color: #eee;
@@ -62,4 +77,54 @@
 .usermenu__profiles__link:active {
 	color: #ddd;
 	background-color: #111;
+}
+
+.quickLogin input {
+	display: block;
+	width: 100%;
+	background-color: #555;
+	color: #fff;
+	border: none;
+	padding: 8px;
+}
+
+.quickLogin button {
+	display: block;
+	width: 100%;
+	color: #fff;
+	border: none;
+	cursor: pointer;
+	padding: 8px;
+}
+
+.quickLogin button.login {
+	background-color: #55A;
+}
+
+.quickLogin button.login:hover {
+	background-color: #66B;
+}
+
+.quickLogin button.login:active{
+	background-color: #449;
+}
+
+.quickLogin button.authorize {
+	background-color: #5A5;
+}
+
+.quickLogin button.authorize:hover {
+	background-color: #6B6;
+}
+
+.quickLogin button.authorize:active{
+	background-color: #494;
+}
+
+.quickLogin__text {
+	padding: 4px 16px;
+}
+
+.quickLogin__text.error {
+	color: #F55;
 }

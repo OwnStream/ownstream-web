@@ -24,11 +24,10 @@ export default function Shell() {
 				<div className={"app-root__header__logo"}>OwnStream</div>
 				<FlexDivider/>
 				<UserIndicator user={user} onClick={() => setUserMenuOpen(!userMenuOpen)}/>
-				{<UserMenu userMenuOpen={userMenuOpen}
-				           setUserMenuOpen={setUserMenuOpen}
-				           profiles={auth.accounts.filter(x => x.user.id !== auth.user?.id).map(x => x.user)}
-				           currentProfile={auth.user}
-				           switchProfile={auth.switchAccount}/>}
+				{userMenuOpen && <UserMenu setUserMenuOpen={setUserMenuOpen}
+				                           profiles={auth.accounts.filter(x => x.user.id !== auth.user?.id).map(x => x.user)}
+				                           currentProfile={auth.user}
+				                           switchProfile={auth.switchAccount}/>}
 			</header>
 			{showNavigation &&
 				<nav className={"app-root__nav"}>

@@ -32,7 +32,7 @@
 	}
 }
 
-input[type=text], input[type=password] {
+.setupScreen input[type=text], input[type=password] {
 	margin-bottom: 8px;
 	border: none;
 	background-color: #222;
@@ -40,12 +40,12 @@ input[type=text], input[type=password] {
 	padding: 16px;
 }
 
-input[type=text]:focus, input[type=password]:focus {
+.setupScreen input[type=text]:focus, .setupScreen input[type=password]:focus {
 	background-color: #fff;
 	color: #000;
 }
 
-button {
+.setupScreen button {
 	border: none;
 	background-color: #66f;
 	color: #fff;
@@ -56,15 +56,15 @@ button {
 	cursor: pointer;
 }
 
-button[disabled] {
+.setupScreen button[disabled] {
 	background-color: #226;
 	cursor: not-allowed;
 }
 
-button:hover:not([disabled]) {
+.setupScreen button:hover:not([disabled]) {
 	background-color: #88f;
 }
 
-button:active:not([disabled]) {
+.setupScreen button:active:not([disabled]) {
 	background-color: #44f;
 }

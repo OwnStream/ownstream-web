@@ -4,7 +4,7 @@ import type {
 	EpisodeToWatch, InstanceInfo,
 	Job, Library,
 	LoginResponse,
-	PagedResponse,
+	PagedResponse, QuickLoginAuthorizeResponse, QuickLoginCheckResponse, QuickLoginSession, QuickLoginStartResponse,
 	Season,
 	ShelfItem, SuccessResponse,
 	User,
@@ -247,6 +247,32 @@ class OwnStreamApiClient {
 		query.set("page", page.toString());
 		query.set("limit", limit.toString());
 		return await this.request<PagedResponse<Content>>(`api/content/library/${libraryId || "00000000-0000-0000-0000-000000000000"}?${query}`);
+	}
+
+	async quickLoginStart(deviceName: string = "OwnStream Web"): Promise<QuickLoginStartResponse> {
+		const query = new URLSearchParams();
+		query.set("deviceName", deviceName);
+		return await this.request<QuickLoginStartResponse>(`api/auth/remote/start?${query}`);
+	}
+
+	async quickLoginCheck(token: string): Promise<QuickLoginCheckResponse> {
+		const query = new URLSearchParams();
+		query.set("token", token);
+		return await this.request<QuickLoginCheckResponse>(`api/auth/remote/check?${query}`);
+	}
+
+	async quickLoginAuthorize(code: string, deviceNameHash?: string, asUser?: string): Promise<QuickLoginAuthorizeResponse> {
+		const query = new URLSearchParams();
+		query.set("code", code);
+		if (deviceNameHash)
+			query.set("deviceNameHash", deviceNameHash);
+		if (asUser)
+			query.set("asUser", asUser);
+		return await this.request<QuickLoginAuthorizeResponse>(`api/auth/remote/authorize?${query}`);
+	}
+
+	async quickLoginSessions(): Promise<QuickLoginSession[]> {
+		return await this.request<QuickLoginSession[]>(`api/auth/remote/sessions`);
 	}
 
 	getMediaUrl(id: string, dir?: string, file: string = "master.m3u8"): string {
