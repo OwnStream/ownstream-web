@@ -4,7 +4,6 @@ import {AuthProvider, useAuth} from "./auth/AuthContext";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SplashScreen from "./pages/SplashScreen";
-import Profiles from "./pages/Profiles";
 import Shell from "./layouts/Shell";
 import type {ReactNode} from "react";
 import Settings from "./pages/Settings.tsx";
@@ -48,7 +47,6 @@ function AppRoutes() {
 		<Routes>
 			<Route path="/login" element={<Login/>}/>
 			<Route path="/splash" element={<SplashScreen/>}/>
-			<Route path="/profiles" element={<Profiles/>}/>
 			<Route path="/setup" element={<SetupScreen/>}/>
 
 			<Route
