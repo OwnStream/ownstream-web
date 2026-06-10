@@ -103,6 +103,8 @@
 }
 
 .app-root__nav__link.active {
+	background: linear-gradient(var(--gradient-dir), #77f, #77f0);
+	font-weight: bold;
 	color: #fff;
 }
 
