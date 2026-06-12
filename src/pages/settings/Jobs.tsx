@@ -165,7 +165,29 @@ export default function JobsTab() {
 			updatedJobs.push(job);
 		})
 		return updatedJobs.sort((a, b) => {
-			return new Date(b.updatedAt ?? b.createdAt).getTime() - new Date(a.updatedAt ?? a.createdAt).getTime();
+			const statusPriority: Record<string, number> = {
+				'Processing': 1,
+				'Starting': 0,
+				'Failed': 2,
+				'Pending': 3,
+				'Completed': 4
+			};
+
+			const aPriority = statusPriority[a.status] ?? 5;
+			const bPriority = statusPriority[b.status] ?? 5;
+
+			if (aPriority !== bPriority) {
+				return aPriority - bPriority;
+			}
+
+			const aTime = new Date(a.updatedAt ?? a.createdAt).getTime();
+			const bTime = new Date(b.updatedAt ?? b.createdAt).getTime();
+
+			if (a.status === 'Pending') {
+				return aTime - bTime;
+			}
+
+			return bTime - aTime;
 		});
 	};
 
