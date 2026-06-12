@@ -45,7 +45,8 @@
 	color: #000;
 }
 
-.setupScreen button {
+.setupScreen button,
+.server-error button {
 	border: none;
 	background-color: #66f;
 	color: #fff;
@@ -56,15 +57,18 @@
 	cursor: pointer;
 }
 
-.setupScreen button[disabled] {
+.setupScreen button[disabled],
+.server-error button[disabled] {
 	background-color: #226;
 	cursor: not-allowed;
 }
 
-.setupScreen button:hover:not([disabled]) {
+.setupScreen button:hover:not([disabled]),
+.server-error button:hover:not([disabled]) {
 	background-color: #88f;
 }
 
-.setupScreen button:active:not([disabled]) {
+.setupScreen button:active:not([disabled]),
+.server-error button:active:not([disabled]) {
 	background-color: #44f;
 }
