@@ -66,6 +66,26 @@
 	}
 }
 
+.shelfItem-forceCompact .shelfItem-portrait {
+	width: 100px;
+}
+
+.shelfItem-forceCompact .shelfItem-landscape {
+	width: 267px;
+}
+
+.shelfItem-forceCompact .shelfItem-thumbnail {
+	height: 150px;
+}
+
+.shelfItem-forceCompact .shelfItem-title {
+	font-size: .85rem;
+}
+
+.shelfItem-forceCompact .shelfItem-subtitle {
+	font-size: .75rem;
+}
+
 .shelfItem-progress {
 	position: absolute;
 	bottom: 0;

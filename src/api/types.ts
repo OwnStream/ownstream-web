@@ -120,6 +120,24 @@ export type QuickLoginSession = {
 	code: string,
 	expiresAt: string,
 }
+export type SearchResponse = {
+	results: SearchResult[],
+	total: number,
+	hasMore: boolean
+}
+export type SearchResult = {
+	kind: string,
+	id: string,
+	contentId?: string,
+	contentTitle?: string,
+	title: string,
+	description?: string,
+	translatedTitle?: string,
+	translatedDescription?: string,
+	images: ContentImages,
+	season?: number,
+	episode?: number
+}
 export type Season = {
 	index: number,
 	episodeCount: number

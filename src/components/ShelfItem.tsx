@@ -4,25 +4,32 @@ import {useNavigate} from "react-router-dom";
 
 type ShelfItemProps = {
 	item: ShelfItem;
+	forceLayout?: "portrait" | "landscape";
+	href?: string;
 };
 
-export default function ShelfItem({item}: ShelfItemProps) {
+export default function ShelfItem({item, forceLayout, href}: ShelfItemProps) {
 	const navigate = useNavigate();
 	return (
-		<div tabIndex={0} className={["shelfItem", item.type == "episode" ? "shelfItem-landscape" : "shelfItem-portrait"].join(" ")}
+		<div tabIndex={0}
+		     className={["shelfItem", forceLayout ? `shelfItem-${forceLayout}` : item.type == "episode" ? "shelfItem-landscape" : "shelfItem-portrait"].join(" ")}
 		     key={item.id + item.episodeId + item.videoId}
-		onClick={() => {
-			switch (item.type) {
-				case "episode":
-				case "video":
-					navigate(`/watch/${item.videoId}`);
-					break;
-				case "tv":
-				case "movie":
-					navigate(`/content/${item.id}`);
-					break;
-			}
-		}}>
+		     onClick={() => {
+				 if (href) {
+					 navigate(href);
+					 return;
+				 }
+				 switch (item.type) {
+					 case "episode":
+					 case "video":
+						 navigate(`/watch/${item.videoId}`);
+						 break;
+					 case "tv":
+					 case "movie":
+						 navigate(`/content/${item.id}`);
+						 break;
+				 }
+			 }}>
 			<div className={"shelfItem-thumbnail"}>
 				{item.image && (<img src={item.image} alt={item.title}/>)}
 				{item.watchProgress !== null && (<div className={"shelfItem-progress"}>

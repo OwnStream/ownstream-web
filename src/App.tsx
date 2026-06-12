@@ -25,6 +25,7 @@ import OrphanVideos from "./pages/settings/OrphanVideos.tsx";
 import LibraryPage from "./pages/LibraryPage.tsx";
 import SetupScreen from "./pages/SetupScreen.tsx";
 import ServerInaccessibleScreen from "./pages/ServerInaccessibleScreen.tsx";
+import SearchPage from "./pages/SearchPage.tsx";
 
 export default function App() {
 	return (
@@ -57,6 +58,7 @@ function AppRoutes() {
 				}
 			>
 				<Route path="/" element={<Home/>}/>
+				<Route path="/search" element={<SearchPage/>}/>
 				<Route path="/library" element={<LibraryPage/>}/>
 				<Route path="/content/:contentId" element={<ContentPage/>}/>
 				<Route path="/watch/:videoId" element={<WatchScreen/>}/>

@@ -4,7 +4,7 @@ import FlexDivider from "../components/FlexDivider.tsx";
 import {useAuth} from "../auth/AuthContext.tsx";
 import UserIndicator from "../components/UserIndicator.tsx";
 import {type ReactNode, useState} from "react";
-import {HomeIcon, LibraryIcon, SettingsIcon} from "lucide-react";
+import {HomeIcon, LibraryIcon, SearchIcon, SettingsIcon} from "lucide-react";
 import UserMenu from "../components/UserMenu.tsx";
 
 function NavButton({to, label, icon}: { to: string, label: string, icon: ReactNode }) {
@@ -15,7 +15,7 @@ export default function Shell() {
 	const auth = useAuth();
 	const user = auth.user;
 	const location = useLocation();
-	const showNavigation = ["", "library", "serverSettings"].includes(location.pathname.split('/').slice(1)[0]);
+	const showNavigation = ["", "library", "serverSettings", "search"].includes(location.pathname.split('/').slice(1)[0]);
 	const [userMenuOpen, setUserMenuOpen] = useState(false);
 
 	return (
@@ -32,6 +32,7 @@ export default function Shell() {
 			{showNavigation &&
 				<nav className={"app-root__nav"}>
 					<NavButton to={"/"} label={"Home"} icon={<HomeIcon/>}/>
+					<NavButton to={"/search"} label={"Search"} icon={<SearchIcon/>}/>
 					<NavButton to={"/library"} label={"Library"} icon={<LibraryIcon/>}/>
 					{auth.showSettings() &&
 						<NavButton to={"/serverSettings"} label={"Settings"} icon={<SettingsIcon/>}/>}

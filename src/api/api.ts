@@ -1,15 +1,24 @@
 import type {
 	Content,
 	Episode,
-	EpisodeToWatch, InstanceInfo,
-	Job, Library,
+	EpisodeToWatch,
+	InstanceInfo,
+	Job,
+	Library,
 	LoginResponse,
-	PagedResponse, QuickLoginAuthorizeResponse, QuickLoginCheckResponse, QuickLoginSession, QuickLoginStartResponse,
+	PagedResponse,
+	QuickLoginAuthorizeResponse,
+	QuickLoginCheckResponse,
+	QuickLoginSession,
+	QuickLoginStartResponse,
+	SearchResponse,
 	Season,
-	ShelfItem, SuccessResponse,
+	ShelfItem,
+	SuccessResponse,
 	User,
 	Video,
-	WatchProgress, Webhook
+	WatchProgress,
+	Webhook
 } from './types';
 import type {Configuration} from "./configTypes.ts";
 
@@ -273,6 +282,17 @@ class OwnStreamApiClient {
 
 	async quickLoginSessions(): Promise<QuickLoginSession[]> {
 		return await this.request<QuickLoginSession[]>(`api/auth/remote/sessions`);
+	}
+
+	async search(query: string, type: "all" | "content" | "movie" | "tv" | "episode" = "all", offset: number = 0, limit: number = 20, libraryId?: string): Promise<SearchResponse> {
+		const q = new URLSearchParams();
+		q.set("q", query);
+		q.set("type", type);
+		q.set("offset", offset.toString());
+		q.set("limit", limit.toString());
+		if (libraryId)
+			q.set("libraryId", libraryId);
+		return await this.request<SearchResponse>(`api/search?${q}`);
 	}
 
 	getMediaUrl(id: string, dir?: string, file: string = "master.m3u8"): string {

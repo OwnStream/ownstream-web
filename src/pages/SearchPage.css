@@ -1,0 +1,32 @@
+.searchPage {
+	padding: 16px 64px;
+}
+
+.searchPage__input {
+	width: 100%;
+	padding: 24px;
+	background-color: #333;
+	color: #fff;
+	border: none;
+	border-radius: 48px;
+	font-size: 1.2rem;
+	margin-bottom: 8px;
+}
+
+.searchPage__input:focus {
+	background-color: #fff;
+	color: #000;
+}
+
+@media screen and (max-width: 1000px) {
+	.searchPage {
+		padding: 16px;
+	}
+}
+
+.searchPage .libraryContents {
+	overflow: visible !important;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
