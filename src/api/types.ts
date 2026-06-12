@@ -52,6 +52,13 @@ export type EpisodeToWatch = {
 	progress: number | null,
 	upNext: Episode | null
 }
+export type InputLibrary = {
+	id: string,
+	name: string,
+	path: string,
+	type: string,
+	transcodeLibraryId: string
+}
 export type InstanceInfo = {
 	name: string,
 	type: string,

@@ -26,6 +26,9 @@ import LibraryPage from "./pages/LibraryPage.tsx";
 import SetupScreen from "./pages/SetupScreen.tsx";
 import ServerInaccessibleScreen from "./pages/ServerInaccessibleScreen.tsx";
 import SearchPage from "./pages/SearchPage.tsx";
+import InputLibrariesSettings from "./pages/settings/InputLibraries.tsx";
+import CreateInputLibrary from "./pages/settings/NewInputLibrary.tsx";
+import EditInputLibrary from "./pages/settings/EditInputLibrary.tsx";
 
 export default function App() {
 	return (
@@ -71,6 +74,9 @@ function AppRoutes() {
 					<Route path="libraries" element={<LibrariesSettings/>}/>
 					<Route path="libraries/new" element={<CreateLibrary/>}/>
 					<Route path="libraries/:id" element={<EditLibrary/>}/>
+					<Route path="inputLibraries" element={<InputLibrariesSettings/>}/>
+					<Route path="inputLibraries/new" element={<CreateInputLibrary/>}/>
+					<Route path="inputLibraries/:id" element={<EditInputLibrary/>}/>
 					<Route path="webhooks" element={<WebhooksSettings/>}/>
 					<Route path="webhooks/new" element={<CreateWebhook/>}/>
 					<Route path="webhooks/:id" element={<EditWebhook/>}/>

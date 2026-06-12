@@ -145,10 +145,10 @@ export default function ContentPage() {
 				items: episodes.map(e => ({
 					id: content.id,
 					episodeId: e.id,
-					videoId: e.videos[0].id,
+					videoId: e.videos.length > 0 ? e.videos[0].id : null,
 					type: "episode",
 					title: `E ${e.episodeNumber}: ${e.translatedTitle || e.originalTitle}`,
-					subtitle: [e.runtime, e.translatedSummary || e.originalSummary].filter(x => x.length > 0),
+					subtitle: [e.runtime, e.translatedSummary || e.originalSummary].filter(x => x?.length > 0),
 					image: e.thumbnail,
 					watchProgress: e.progress
 				} as ShelfItem))

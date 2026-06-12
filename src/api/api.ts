@@ -1,7 +1,7 @@
 import type {
 	Content,
 	Episode,
-	EpisodeToWatch,
+	EpisodeToWatch, InputLibrary,
 	InstanceInfo,
 	Job,
 	Library,
@@ -209,6 +209,30 @@ class OwnStreamApiClient {
 
 	async deleteLibrary(id: string, deleteMedia: boolean = false): Promise<SuccessResponse<void>> {
 		return await this.request<SuccessResponse<void>>(`api/manage/libraries/${id}?deleteMedia=${deleteMedia}`, undefined, "DELETE");
+	}
+
+	async getInputLibraries(): Promise<InputLibrary[]> {
+		return await this.request<InputLibrary[]>(`api/manage/inputLibraries/list`);
+	}
+
+	async createInputLibrary(name: string, path: string, type: string, transcodeLibraryId: string): Promise<SuccessResponse<InputLibrary>> {
+		return await this.request<SuccessResponse<InputLibrary>>(`api/manage/inputLibraries/new`, {name, path, type, transcodeLibraryId});
+	}
+
+	async getInputLibrary(id: string): Promise<InputLibrary> {
+		return await this.request<InputLibrary>(`api/manage/inputLibraries/${id}`);
+	}
+
+	async scanInputLibrary(id: string): Promise<SuccessResponse<void>> {
+		return await this.request<SuccessResponse<void>>(`api/manage/inputLibraries/${id}/scan`);
+	}
+
+	async modifyInputLibrary(id: string, name: string, type: string, transcodeLibraryId: string) {
+		return await this.request<InputLibrary>(`api/manage/inputLibraries/${id}`, {name, type, transcodeLibraryId}, "PATCH");
+	}
+
+	async deleteInputLibrary(id: string, deleteMedia: boolean = false): Promise<SuccessResponse<void>> {
+		return await this.request<SuccessResponse<void>>(`api/manage/inputLibraries/${id}?deleteMedia=${deleteMedia}`, undefined, "DELETE");
 	}
 
 	async getWebhooks(): Promise<Webhook[]> {
