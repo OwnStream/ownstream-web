@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import BackButton from "../../components/BackButton.tsx";
 import {client} from "../../api/api.ts";
 import {useNavigate, useParams} from "react-router-dom";
-import {FolderCheckIcon, Trash2Icon} from "lucide-react";
+import {DatabaseBackupIcon, FolderCheckIcon, Trash2Icon} from "lucide-react";
 import type {Library} from "../../api/types.ts";
 
 export default function EditLibrary() {
@@ -57,6 +57,14 @@ export default function EditLibrary() {
 		}} className={"settingsInput-button settingsInput-save"}>
 			<FolderCheckIcon/>
 			<span>Update Library</span>
+		</button>
+		<button onClick={async () => {
+			const success = await client.recalculateLibrarySize(library.id);
+			if (success.success)
+				navigate("/serverSettings/jobs");
+		}} className={"settingsInput-button settingsInput-save"}>
+			<DatabaseBackupIcon/>
+			<span>Recalculate File Sizes</span>
 		</button>
 		<button onClick={async () => {
 			const result = await client.deleteLibrary(library.id, false);

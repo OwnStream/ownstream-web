@@ -207,6 +207,10 @@ class OwnStreamApiClient {
 		return await this.request<Library>(`api/manage/libraries/${id}`, {name}, "PATCH");
 	}
 
+	async recalculateLibrarySize(id: string): Promise<SuccessResponse<void>> {
+		return await this.request<SuccessResponse<void>>(`api/manage/libraries/${id}/recalculateSize`, undefined, "POST");
+	}
+
 	async deleteLibrary(id: string, deleteMedia: boolean = false): Promise<SuccessResponse<void>> {
 		return await this.request<SuccessResponse<void>>(`api/manage/libraries/${id}?deleteMedia=${deleteMedia}`, undefined, "DELETE");
 	}
