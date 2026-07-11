@@ -290,3 +290,7 @@ div[class^="videoPlayer-segment-"] {
 .videoPlayer-skipButton:active {
 	scale: 90%;
 }
+
+.videoPlayer:not(.controls-visible) {
+	cursor: none;
+}
