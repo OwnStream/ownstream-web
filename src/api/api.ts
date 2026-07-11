@@ -130,6 +130,10 @@ class OwnStreamApiClient {
 		return await this.request<Video>(`api/video/${id}`);
 	}
 
+	async deleteVideo(id: string, deleteEpisode: boolean): Promise<SuccessResponse<void>> {
+		return await this.request<SuccessResponse<void>>(`api/video/${id}?deleteEpisode=${deleteEpisode}`, undefined, "DELETE");
+	}
+
 	async updateWatchProgress(videoId: string, videoLength: number | null, watchedMilliseconds: number | null, markAsWatched: boolean | null): Promise<unknown> {
 		return await this.request<unknown>(`api/progress/update`, {
 			videoId,

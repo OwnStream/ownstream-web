@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {client} from "../../api/api.ts";
 import type {Video} from "../../api/types.ts";
 import CircleButton from "../../components/CircleButton.tsx";
-import {PlayIcon} from "lucide-react";
+import {TrashIcon, PlayIcon} from "lucide-react";
 import {NavLink} from "react-router-dom";
 
 export default function OrphanVideos() {
@@ -52,6 +52,12 @@ export default function OrphanVideos() {
 								<div className={"videoList-item-subtitle"}>{video.width}x{video.height} @ {video.fps} FPS</div>
 							</div>
 							<div className={"videoList-item-buttons"}>
+								<CircleButton icon={<TrashIcon/>} tooltip={"Delete Video"} onClick={async () => {
+									const success = await client.deleteVideo(video.id, false);
+									if (success.success) {
+										setVideos(v => [...v.filter(x => x.id !== video.id)]);
+									}
+								}}/>
 								<NavLink to={`/watch/${video.id}`}><CircleButton icon={<PlayIcon/>} tooltip={"Watch Video"} onClick={() => {}}/></NavLink>
 							</div>
 						</div>
