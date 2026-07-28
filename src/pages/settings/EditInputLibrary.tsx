@@ -43,8 +43,8 @@ export default function EditInputLibrary() {
 		<EnumInput value={inputLibrary.type} onChange={v => setInputLibrary({...inputLibrary, type: v})}
 		           label={"Type"}
 		           values={{
-					   "tv": "TV Shows",
-					   "movie": "Movies"
+					   "Tv": "TV Shows",
+					   "Movie": "Movies"
 				   }}/>
 		<p>Path: <code>{inputLibrary.path}</code></p>
 		<button onClick={async () => {
