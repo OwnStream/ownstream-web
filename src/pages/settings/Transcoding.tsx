@@ -1,8 +1,16 @@
 import {useEffect, useState} from "react";
 import type {AudioPreset, Configuration, VideoPreset} from "../../api/configTypes.ts";
 import {client} from "../../api/api.ts";
-import {AddButton, DeleteButton, EnumInput, NumberInput, SaveButton, StringInput} from "./SharedInputs.tsx";
-import {FileVideoCameraIcon, PaletteIcon} from "lucide-react";
+import {
+	AddButton,
+	CheckboxInput,
+	DeleteButton,
+	EnumInput,
+	NumberInput,
+	SaveButton,
+	StringInput
+} from "./SharedInputs.tsx";
+import {CopyIcon, FileVideoCameraIcon, PaletteIcon} from "lucide-react";
 
 function VideoPreset(props: { preset: VideoPreset; onChange: (preset: VideoPreset) => void; onDelete: () => void }) {
 	const preset = props.preset;
@@ -163,6 +171,18 @@ export default function TranscodingSettings() {
 		/>
 		<p className={"settingsInput-info"}>
 			Not all clients or encoders might support 10-bit color.
+		</p>
+		<CheckboxInput
+			icon={<CopyIcon/>}
+			checked={config.transcode.copyFileToTmp}
+			onChange={value => setConfig({
+				...config,
+				transcode: {...config.transcode, copyFileToTmp: value}
+			})}
+			label="Copy input to a temporary directory during transcode"
+		/>
+		<p className={"settingsInput-info"}>
+			Recommended if your input file is in a network drive
 		</p>
 		<div style={{borderBottom: "1px solid #666", paddingBottom: "12px"}}>
 			<h2>Video Presets</h2>

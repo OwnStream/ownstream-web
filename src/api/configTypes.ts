@@ -7,6 +7,8 @@ export type TranscodeConfiguration = {
 	videoPresets: VideoPreset[],
 	audioPresets: AudioPreset[],
 	audioLanguages: string[],
+	subtitleLanguages: string[],
+	copyFileToTmp: boolean,
 	pixelFormatHandling: number
 }
 
