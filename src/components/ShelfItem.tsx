@@ -1,6 +1,6 @@
 import "./ShelfItem.css";
 import type {ShelfItem} from "../api/types.ts";
-import {useNavigate, NavLink} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 
 type ShelfItemProps = {
 	item: ShelfItem;
@@ -9,9 +9,8 @@ type ShelfItemProps = {
 };
 
 export default function ShelfItem({item, forceLayout, href}: ShelfItemProps) {
-	const navigate = useNavigate();
-	let target = href;
-	if (!target) {
+	let target = href ?? "";
+	if (href === undefined) {
 		switch (item.type) {
 			case "episode":
 			case "video":
