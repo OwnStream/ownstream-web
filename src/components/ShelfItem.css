@@ -4,6 +4,7 @@
 	cursor: pointer;
 	flex-shrink: 0;
 	outline: none;
+	text-decoration: none;
 }
 
 .shelfItem:hover {

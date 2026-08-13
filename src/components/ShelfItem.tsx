@@ -1,6 +1,6 @@
 import "./ShelfItem.css";
 import type {ShelfItem} from "../api/types.ts";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, NavLink} from "react-router-dom";
 
 type ShelfItemProps = {
 	item: ShelfItem;
@@ -10,26 +10,24 @@ type ShelfItemProps = {
 
 export default function ShelfItem({item, forceLayout, href}: ShelfItemProps) {
 	const navigate = useNavigate();
+	let target = href;
+	if (!target) {
+		switch (item.type) {
+			case "episode":
+			case "video":
+				target = `/watch/${item.videoId}`;
+				break;
+			case "tv":
+			case "movie":
+				target = `/content/${item.id}`;
+				break;
+		}
+	}
 	return (
-		<div tabIndex={0}
+		<NavLink tabIndex={0}
 		     className={["shelfItem", forceLayout ? `shelfItem-${forceLayout}` : item.type == "episode" ? "shelfItem-landscape" : "shelfItem-portrait"].join(" ")}
 		     key={item.id + item.episodeId + item.videoId}
-		     onClick={() => {
-				 if (href) {
-					 navigate(href);
-					 return;
-				 }
-				 switch (item.type) {
-					 case "episode":
-					 case "video":
-						 navigate(`/watch/${item.videoId}`);
-						 break;
-					 case "tv":
-					 case "movie":
-						 navigate(`/content/${item.id}`);
-						 break;
-				 }
-			 }}>
+		     to={target}>
 			<div className={"shelfItem-thumbnail"}>
 				{item.image && (<img src={item.image} alt={item.title}/>)}
 				{item.watchProgress !== null && (<div className={"shelfItem-progress"}>
@@ -40,6 +38,6 @@ export default function ShelfItem({item, forceLayout, href}: ShelfItemProps) {
 				<div className={"shelfItem-title"}>{item.title}</div>
 				<div className={"shelfItem-subtitle"}>{item.subtitle.map(s => (<span>{s}</span>))}</div>
 			</div>
-		</div>
+		</NavLink>
 	)
 }
