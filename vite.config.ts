@@ -13,7 +13,7 @@ function copyLibassWasmAssets() {
 		configureServer() {
 			copyAssets();
 		},
-		closeBundle() {
+		buildStart() {
 			copyAssets();
 		}
 	};
