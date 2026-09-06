@@ -433,7 +433,10 @@ export default function WatchScreen() {
 					hls.loadSource(client.getMediaUrl(videoId!));
 					hls.attachMedia(videoRef.current);
 					hls.on(Hls.Events.ERROR, (_, e) => {
-						setError(e);
+						// TODO: add an actual error screen here
+						//       and use toasts for reporting non-fatal errors
+						if (e.fatal)
+							setError(e);
 					});
 				} else if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
 					// For Safari (native HLS support)
