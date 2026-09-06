@@ -4,7 +4,7 @@ import FlexDivider from "../components/FlexDivider.tsx";
 import {useAuth} from "../auth/AuthContext.tsx";
 import UserIndicator from "../components/UserIndicator.tsx";
 import {type ReactNode, useState} from "react";
-import {HomeIcon, LibraryIcon, SearchIcon, SettingsIcon} from "lucide-react";
+import {EditIcon, HomeIcon, LibraryIcon, SearchIcon, SettingsIcon} from "lucide-react";
 import UserMenu from "../components/UserMenu.tsx";
 
 function NavButton({to, label, icon}: { to: string, label: string, icon: ReactNode }) {
@@ -34,6 +34,8 @@ export default function Shell() {
 					<NavButton to={"/"} label={"Home"} icon={<HomeIcon/>}/>
 					<NavButton to={"/search"} label={"Search"} icon={<SearchIcon/>}/>
 					<NavButton to={"/library"} label={"Library"} icon={<LibraryIcon/>}/>
+					{auth.showSettings() &&
+						<NavButton to={"/metadataEditor"} label={"Metadata Editor"} icon={<EditIcon/>}/>}
 					{auth.showSettings() &&
 						<NavButton to={"/serverSettings"} label={"Settings"} icon={<SettingsIcon/>}/>}
 				</nav>}

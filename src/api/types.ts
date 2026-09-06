@@ -26,6 +26,27 @@ export type ContentImages = {
 	backdrop: string | null,
 	thumbnail: string | null,
 }
+export type ContentMetadata = {
+	id: string,
+	type: 0 | 1,
+	title: string,
+	translatedTitle: Record<string, string>,
+	tagline: string,
+	translatedTagline: Record<string, string>,
+	description: string,
+	translatedDescription: Record<string, string>,
+	poster?: string,
+	banner?: string,
+	logo?: string,
+	backdrop?: string,
+	thumbnail?: string,
+	createdAt: string,
+	updatedAt: string,
+	releasedAt: string,
+	finishedStreamingAt?: string,
+	ageRatings: Record<string, string>,
+	externalIds: Record<string, string>,
+}
 export type DiskUsage = {
 	used: number,
 	available: number,
@@ -46,6 +67,19 @@ export type Episode = {
 	releasedAt: string,
 	videos: Video[],
 	progress: number | null,
+}
+export type EpisodeMetadata = {
+	Id: string,
+	Season: number,
+	Episode: number,
+	Title: string,
+	TranslatedTitle: Record<string, string>,
+	Summary: string,
+	TranslatedSummary: Record<string, string>,
+	Thumbnail?: string,
+	CreatedAt: string,
+	UpdatedAt: string,
+	ReleasedAt: string,
 }
 export type EpisodeToWatch = {
 	continueWatching: Episode | null,

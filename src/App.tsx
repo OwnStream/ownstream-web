@@ -29,6 +29,9 @@ import SearchPage from "./pages/SearchPage.tsx";
 import InputLibrariesSettings from "./pages/settings/InputLibraries.tsx";
 import CreateInputLibrary from "./pages/settings/NewInputLibrary.tsx";
 import EditInputLibrary from "./pages/settings/EditInputLibrary.tsx";
+import MetadataEditorPage from "./pages/metadataeditor/MetadataEditor.tsx";
+import MetadataEditorLibraryPage from "./pages/metadataeditor/MetadataEditorLibraryPage.tsx";
+import MetadataEditorContentPage from "./pages/metadataeditor/MetadataEditorContentPage.tsx";
 
 export default function App() {
 	return (
@@ -82,6 +85,12 @@ function AppRoutes() {
 					<Route path="webhooks/:id" element={<EditWebhook/>}/>
 					<Route path="jobs" element={<JobsTab/>}/>
 					<Route path="orphanVideos" element={<OrphanVideos/>}/>
+				</Route>
+				<Route path="/metadataEditor" element={<MetadataEditorPage/>}>
+					<Route path={"/metadataEditor/:libraryId"} element={<MetadataEditorLibraryPage/>}/>
+					<Route path={"/metadataEditor/:libraryId/:contentId"} element={<MetadataEditorContentPage/>}/>
+					<Route path={"/metadataEditor/:libraryId/:contentId/:seasonIndex"} element={<div></div>}/>
+					<Route path={"/metadataEditor/:libraryId/:contentId/:seasonIndex/:episodeId"} element={<div></div>}/>
 				</Route>
 			</Route>
 		</Routes>

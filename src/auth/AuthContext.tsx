@@ -13,6 +13,7 @@ type AuthContextValue = {
   switchAccount: (userId: string) => Promise<void>;
   removeAccount: (userId: string) => void;
   showSettings: () => boolean;
+  hasPermission: (permission: string) => boolean;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);

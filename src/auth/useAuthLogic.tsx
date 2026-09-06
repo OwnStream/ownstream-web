@@ -145,11 +145,17 @@ export function useAuthLogic() {
 		return false;
 	}
 
+	const hasPermission = (perm: string) => {
+		const permissions = user?.permissions;
+		if (!permissions) return false;
+		return permissions.includes(perm);
+	}
+
 	useEffect(() => {
 		(async () => {
 			await retry();
 		})();
 	}, []);
 
-	return {status, user, accounts, retry, login, logout, switchAccount, removeAccount, showSettings};
+	return {status, user, accounts, retry, login, logout, switchAccount, removeAccount, showSettings, hasPermission};
 }

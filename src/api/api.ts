@@ -1,5 +1,5 @@
 import type {
-	Content,
+	Content, ContentMetadata,
 	Episode,
 	EpisodeToWatch, InputLibrary,
 	InstanceInfo,
@@ -325,6 +325,14 @@ class OwnStreamApiClient {
 		if (libraryId)
 			q.set("libraryId", libraryId);
 		return await this.request<SearchResponse>(`api/search?${q}`);
+	}
+
+	async getContentMetadata(id: string): Promise<ContentMetadata> {
+		return await this.request<ContentMetadata>(`api/metadata/content/${id}`);
+	}
+
+	async setContentMetadata(metadata: ContentMetadata): Promise<SuccessResponse<ContentMetadata>> {
+		return await this.request<SuccessResponse<ContentMetadata>>(`api/metadata/content/${metadata.id}`, metadata, "PATCH");
 	}
 
 	getMediaUrl(id: string, dir?: string, file: string = "master.m3u8"): string {
