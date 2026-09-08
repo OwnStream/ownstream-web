@@ -69,17 +69,17 @@ export type Episode = {
 	progress: number | null,
 }
 export type EpisodeMetadata = {
-	Id: string,
-	Season: number,
-	Episode: number,
-	Title: string,
-	TranslatedTitle: Record<string, string>,
-	Summary: string,
-	TranslatedSummary: Record<string, string>,
-	Thumbnail?: string,
-	CreatedAt: string,
-	UpdatedAt: string,
-	ReleasedAt: string,
+	id: string,
+	season: number,
+	episode: number,
+	title: string,
+	translatedTitle: Record<string, string>,
+	summary: string,
+	translatedSummary: Record<string, string>,
+	thumbnail?: string,
+	createdAt: string,
+	updatedAt: string,
+	releasedAt: string,
 }
 export type EpisodeToWatch = {
 	continueWatching: Episode | null,

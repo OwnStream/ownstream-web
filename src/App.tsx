@@ -32,6 +32,8 @@ import EditInputLibrary from "./pages/settings/EditInputLibrary.tsx";
 import MetadataEditorPage from "./pages/metadataeditor/MetadataEditor.tsx";
 import MetadataEditorLibraryPage from "./pages/metadataeditor/MetadataEditorLibraryPage.tsx";
 import MetadataEditorContentPage from "./pages/metadataeditor/MetadataEditorContentPage.tsx";
+import MetadataEditorSeasonPage from "./pages/metadataeditor/MetadataEditorSeasonPage.tsx";
+import MetadataEditorEpisodePage from "./pages/metadataeditor/MetadataEditorEpisodePage.tsx";
 
 export default function App() {
 	return (
@@ -89,8 +91,8 @@ function AppRoutes() {
 				<Route path="/metadataEditor" element={<MetadataEditorPage/>}>
 					<Route path={"/metadataEditor/:libraryId"} element={<MetadataEditorLibraryPage/>}/>
 					<Route path={"/metadataEditor/:libraryId/:contentId"} element={<MetadataEditorContentPage/>}/>
-					<Route path={"/metadataEditor/:libraryId/:contentId/:seasonIndex"} element={<div></div>}/>
-					<Route path={"/metadataEditor/:libraryId/:contentId/:seasonIndex/:episodeId"} element={<div></div>}/>
+					<Route path={"/metadataEditor/:libraryId/:contentId/:seasonIndex"} element={<MetadataEditorSeasonPage/>}/>
+					<Route path={"/metadataEditor/:libraryId/:contentId/:seasonIndex/:episodeId"} element={<MetadataEditorEpisodePage/>}/>
 				</Route>
 			</Route>
 		</Routes>

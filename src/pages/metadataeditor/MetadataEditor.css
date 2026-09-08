@@ -74,6 +74,10 @@ Testing out nested classes
 			.treeItem:has(a.active):hover {
 				background: #555;
 			}
+
+			.treeItem-movie {
+				padding-left: 46px !important;
+			}
 		}
 	}
 

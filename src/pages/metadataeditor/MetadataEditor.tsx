@@ -101,7 +101,7 @@ function ContentNode({library, content, selectedContentId, selectedSeasonIndex}:
 		}
 	};
 
-	const shouldOpen = selectedContentId === content.id;
+	const shouldOpen = selectedContentId === content.id && content.type != "Movie";
 	const detailsRef = useRef<HTMLDetailsElement>(null);
 	useEffect(() => {
 		if (shouldOpen) {
@@ -111,6 +111,16 @@ function ContentNode({library, content, selectedContentId, selectedSeasonIndex}:
 		}
 	}, [shouldOpen, detailsRef, loadContents]);
 
+	if (content.type == "Movie") {
+		return (
+			<div className={"treeItem depth-2 treeItem-movie"}>
+				<NavLink to={`/metadataEditor/${library.id}/${content.id}`}>
+					<ClapperboardIcon/>
+					{content.originalTitle}
+				</NavLink>
+			</div>
+		);
+	}
 	return (
 		<details open={shouldOpen} onToggle={(event) => {
 			if (event.currentTarget.open)
@@ -118,7 +128,7 @@ function ContentNode({library, content, selectedContentId, selectedSeasonIndex}:
 		}}>
 			<summary className={"treeItem depth-2"}>
 				<NavLink to={`/metadataEditor/${library.id}/${content.id}`}>
-					{content.type == "Movie" ? <ClapperboardIcon/> : <TvIcon/>}
+					<TvIcon/>
 					{content.originalTitle}
 				</NavLink>
 			</summary>

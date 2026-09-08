@@ -10,6 +10,15 @@ interface StringInputProps {
 	placeholder?: string;
 }
 
+interface NumberInputProps {
+	label: string;
+	value: number;
+	onChange: (value: number) => void;
+	min?: number;
+	max?: number;
+	placeholder?: string;
+}
+
 export function LanguageInput({value, onChange, label, min, max, type, placeholder}: StringInputProps) {
 	const [localValue, setLocalValue] = useState<string>(value);
 	return (
@@ -88,6 +97,27 @@ export function DateInput({value, onChange, label, min, max}: StringInputProps) 
 				onChange={(e: ChangeEvent<HTMLInputElement>) => {
 					onChange(e.target.value);
 				}}
+				min={min}
+				max={max}
+				className={"metadataInput-string"}
+			/>
+		</div>
+	);
+}
+
+export function NumberInput({value, onChange, label, min, max, placeholder}: NumberInputProps) {
+	return (
+		<div className={"metadataInput"}>
+			<label className={"metadataInput-text"}>
+				{label}
+			</label>
+			<input
+				type={"number"}
+				value={value}
+				onChange={(e: ChangeEvent<HTMLInputElement>) => {
+					onChange(Number.parseInt(e.target.value));
+				}}
+				placeholder={placeholder}
 				min={min}
 				max={max}
 				className={"metadataInput-string"}
