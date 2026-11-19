@@ -1,18 +1,22 @@
 import type {
-	Content, ContentMetadata,
-	Episode, EpisodeMetadata,
-	EpisodeToWatch, InputLibrary,
+	Content,
+	ContentMetadata,
+	Episode,
+	EpisodeMetadata,
+	EpisodeToWatch,
+	InputLibrary,
 	InstanceInfo,
 	Job,
 	Library,
 	LoginResponse,
 	PagedResponse,
+	PluginContentSearchResult, PluginItem, PluginMeta,
 	QuickLoginAuthorizeResponse,
 	QuickLoginCheckResponse,
 	QuickLoginSession,
-	QuickLoginStartResponse,
-	SearchResponse,
+	QuickLoginStartResponse, SearchResult,
 	Season,
+	SeasonMetadata,
 	ShelfItem,
 	SuccessResponse,
 	User,
@@ -46,14 +50,22 @@ class OwnStreamApiClient {
 		this.token = null;
 	}
 
-	private async request<T>(url: string, body?: object, method?: string): Promise<T> {
+	private async request<T>(url: string, body?: object | FormData, method?: string,): Promise<T> {
 		const headers: Record<string, string> = {};
 		if (this.token) headers["Authorization"] = "Bearer " + this.token;
-		if (body) headers["Content-Type"] = "application/json";
+
+		const isFormData = body instanceof FormData;
+		if (body && !isFormData) {
+			headers["Content-Type"] = "application/json";
+		}
+
 		const response = await fetch(`${this.baseUrl}/${url}`, {
 			headers,
-			method: method ? method : body ? "POST" : "GET",
-			body: body ? JSON.stringify(body) : undefined,
+			method: method ?? (body ? "POST" : "GET"),
+			body: body ? isFormData
+					? body
+					: JSON.stringify(body)
+				: undefined,
 		});
 		if (response.status >= 200 && response.status < 300) {
 			const r = await response.text()
@@ -224,7 +236,12 @@ class OwnStreamApiClient {
 	}
 
 	async createInputLibrary(name: string, path: string, type: string, transcodeLibraryId: string): Promise<SuccessResponse<InputLibrary>> {
-		return await this.request<SuccessResponse<InputLibrary>>(`api/manage/inputLibraries/new`, {name, path, type, transcodeLibraryId});
+		return await this.request<SuccessResponse<InputLibrary>>(`api/manage/inputLibraries/new`, {
+			name,
+			path,
+			type,
+			transcodeLibraryId
+		});
 	}
 
 	async getInputLibrary(id: string): Promise<InputLibrary> {
@@ -236,7 +253,11 @@ class OwnStreamApiClient {
 	}
 
 	async modifyInputLibrary(id: string, name: string, type: string, transcodeLibraryId: string) {
-		return await this.request<InputLibrary>(`api/manage/inputLibraries/${id}`, {name, type, transcodeLibraryId}, "PATCH");
+		return await this.request<InputLibrary>(`api/manage/inputLibraries/${id}`, {
+			name,
+			type,
+			transcodeLibraryId
+		}, "PATCH");
 	}
 
 	async deleteInputLibrary(id: string, deleteMedia: boolean = false): Promise<SuccessResponse<void>> {
@@ -316,7 +337,7 @@ class OwnStreamApiClient {
 		return await this.request<QuickLoginSession[]>(`api/auth/remote/sessions`);
 	}
 
-	async search(query: string, type: "all" | "content" | "movie" | "tv" | "episode" = "all", offset: number = 0, limit: number = 20, libraryId?: string): Promise<SearchResponse> {
+	async search(query: string, type: "all" | "content" | "movie" | "tv" | "episode" = "all", offset: number = 0, limit: number = 20, libraryId?: string): Promise<PagedResponse<SearchResult>> {
 		const q = new URLSearchParams();
 		q.set("q", query);
 		q.set("type", type);
@@ -324,23 +345,73 @@ class OwnStreamApiClient {
 		q.set("limit", limit.toString());
 		if (libraryId)
 			q.set("libraryId", libraryId);
-		return await this.request<SearchResponse>(`api/search?${q}`);
+		return await this.request<PagedResponse<SearchResult>>(`api/search?${q}`);
 	}
 
 	async getContentMetadata(id: string): Promise<ContentMetadata> {
 		return await this.request<ContentMetadata>(`api/metadata/content/${id}`);
 	}
 
+	async refreshContentMetadata(id: string, apply: boolean = true): Promise<ContentMetadata> {
+		return await this.request<ContentMetadata>(`api/metadata/content/${id}/refresh?apply=${apply}`, undefined, "POST");
+	}
+
 	async setContentMetadata(metadata: ContentMetadata): Promise<SuccessResponse<ContentMetadata>> {
 		return await this.request<SuccessResponse<ContentMetadata>>(`api/metadata/content/${metadata.id}`, metadata, "PATCH");
+	}
+
+	async getSeasons(id: string): Promise<SeasonMetadata[]> {
+		return await this.request<SeasonMetadata[]>(`api/metadata/content/${id}/seasons`);
+	}
+
+	async refreshSeasonMetadata(id: string, index: number, apply: boolean = true): Promise<SeasonMetadata> {
+		return await this.request<SeasonMetadata>(`api/metadata/content/${id}/seasons/${index}/refresh?apply=${apply}`, undefined, "POST");
+	}
+
+	async setSeasonMetadata(metadata: SeasonMetadata): Promise<SuccessResponse<SeasonMetadata>> {
+		return await this.request<SuccessResponse<SeasonMetadata>>(`api/metadata/content/${metadata.contentId}/seasons/${metadata.index}`, metadata, "PATCH");
 	}
 
 	async getEpisodeMetadata(id: string): Promise<EpisodeMetadata> {
 		return await this.request<EpisodeMetadata>(`api/metadata/episode/${id}`);
 	}
 
+	async refreshEpisodeMetadata(id: string, apply: boolean = true): Promise<EpisodeMetadata> {
+		return await this.request<EpisodeMetadata>(`api/metadata/episode/${id}?apply=${apply}`, undefined, "POST");
+	}
+
 	async setEpisodeMetadata(metadata: EpisodeMetadata): Promise<SuccessResponse<EpisodeMetadata>> {
 		return await this.request<SuccessResponse<EpisodeMetadata>>(`api/metadata/episode/${metadata.id}`, metadata, "PATCH");
+	}
+
+	async searchProviders(providerId: string, contentId: string): Promise<SuccessResponse<PluginContentSearchResult[]>> {
+		return await this.request<SuccessResponse<PluginContentSearchResult[]>>(`api/metadata/search/${providerId}?contentId=${contentId}`)
+	}
+
+	async listPlugins(): Promise<PluginItem[]> {
+		return await this.request<PluginItem[]>("api/plugins/list")
+	}
+
+	async enablePlugin(path: string): Promise<SuccessResponse<void>> {
+		return await this.request<SuccessResponse<void>>("api/plugins/enable?path=" + encodeURIComponent(path), undefined, "POST");
+	}
+
+	async disablePlugin(path: string): Promise<SuccessResponse<void>> {
+		return await this.request<SuccessResponse<void>>("api/plugins/disable?path=" + encodeURIComponent(path), undefined, "POST");
+	}
+
+	async installPlugin(file: Blob): Promise<SuccessResponse<PluginMeta>> {
+		const form = new FormData();
+		form.append("file", file);
+		return await this.request<SuccessResponse<PluginMeta>>("api/plugins/install", form);
+	}
+
+	async deletePlugin(path: string): Promise<SuccessResponse<void>> {
+		return await this.request<SuccessResponse<void>>("api/plugins/delete?path=" + encodeURIComponent(path), undefined, "DELETE");
+	}
+
+	async reloadPlugin(path: string): Promise<SuccessResponse<void>> {
+		return await this.request<SuccessResponse<void>>("api/plugins/reload?path=" + encodeURIComponent(path), undefined, "POST");
 	}
 
 	getMediaUrl(id: string, dir?: string, file: string = "master.m3u8"): string {

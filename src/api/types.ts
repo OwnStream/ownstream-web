@@ -134,6 +134,40 @@ export type PagedResponse<T> = {
 	count: number,
 	pages: number
 }
+export type PluginContentSearchResult = {
+	pluginId: string,
+	externalId: string,
+	titles: string[],
+	poster?: string,
+	year?: number
+}
+export type PluginItem = {
+	id: string,
+	version: string,
+	path: string,
+	state: string
+}
+export type PluginMeta = {
+	id: string,
+	name: string,
+	version: PluginVersion,
+	index: string,
+	image: string,
+	permissions: string[],
+	features: string[],
+	homepage?: string,
+	source?: string,
+	issues?: string,
+	autoUpdater?: PluginUpdaterConfig
+}
+export type PluginUpdaterConfig = {
+	type: string,
+	params: Record<string, string>
+}
+export type PluginVersion = {
+	name: string,
+	code: number
+}
 export type PreviewFile = {
 	template: string,
 	frameCount: number,
@@ -161,11 +195,6 @@ export type QuickLoginSession = {
 	code: string,
 	expiresAt: string,
 }
-export type SearchResponse = {
-	results: SearchResult[],
-	total: number,
-	hasMore: boolean
-}
 export type SearchResult = {
 	kind: string,
 	id: string,
@@ -181,7 +210,21 @@ export type SearchResult = {
 }
 export type Season = {
 	index: number,
-	episodeCount: number
+	episodeCount: number,
+	title?: string,
+	description?: string,
+	translatedTitle?: string,
+	translatedDescription?: string,
+	poster?: string
+}
+export type SeasonMetadata = {
+	contentId: string,
+	index: number,
+	title: string,
+	description: string,
+	translatedTitle: Record<string, string>,
+	translatedDescription: Record<string, string>,
+	poster?: string
 }
 export type ShelfItem = {
 	type: string,

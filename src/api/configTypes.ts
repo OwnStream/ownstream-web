@@ -1,5 +1,6 @@
 export type Configuration = {
-	transcode: TranscodeConfiguration
+	transcode: TranscodeConfiguration,
+	metadata: MetadataConfiguration
 }
 
 export type TranscodeConfiguration = {
@@ -23,4 +24,8 @@ export type AudioPreset = {
 	bitrate: number,
 	channels: number,
 	codec: string
+}
+
+export type MetadataConfiguration = {
+	metadataProviderOrder: string[]
 }
