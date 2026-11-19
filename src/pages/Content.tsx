@@ -10,7 +10,7 @@ export default function ContentPage() {
 	const [content, setContent] = useState<Content | null>(null);
 	const [upNext, setUpNext] = useState<EpisodeToWatch | null>(null);
 	const [seasons, setSeasons] = useState<Season[]>([]);
-	const [seasonEpisodes, setSeasonEpisodes] = useState<Record<number, Episode[]>>([]);
+	const [seasonEpisodes, setSeasonEpisodes] = useState<[Season, Episode[]][]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<Error | null>(null);
 
@@ -46,7 +46,7 @@ export default function ContentPage() {
 					console.error(`Failed to load episodes for season ${s.index}`, e);
 				}
 			}
-			setSeasonEpisodes(episodes);
+			setSeasonEpisodes(seasons.map(x => [x, episodes[x.index]]));
 		})();
 	}, [seasons, content]);
 
@@ -136,10 +136,10 @@ export default function ContentPage() {
 				</table>
 			</div>
 		</div>
-		{Object.entries(seasonEpisodes).map(([index, episodes]) =>
+		{seasonEpisodes.map(([season, episodes]) =>
 			(<Shelf shelf={{
-				title: `Season ${index}`,
-				description: null,
+				title: season.translatedTitle ?? season.title ?? `Season ${season.index}`,
+				description: season.translatedDescription ?? season.description ?? null,
 				icon: null,
 				type: "season",
 				items: episodes.map(e => ({
