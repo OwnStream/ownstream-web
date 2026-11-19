@@ -364,6 +364,10 @@ class OwnStreamApiClient {
 		return await this.request<SeasonMetadata[]>(`api/metadata/content/${id}/seasons`);
 	}
 
+	async getSeasonMetadata(id: string, index: number): Promise<SeasonMetadata> {
+		return await this.request<SeasonMetadata>(`api/metadata/content/${id}/seasons/${index}`);
+	}
+
 	async refreshSeasonMetadata(id: string, index: number, apply: boolean = true): Promise<SeasonMetadata> {
 		return await this.request<SeasonMetadata>(`api/metadata/content/${id}/seasons/${index}/refresh?apply=${apply}`, undefined, "POST");
 	}

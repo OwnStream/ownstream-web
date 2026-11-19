@@ -1,24 +1,90 @@
 import "../settings/ProgressBar.css"
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {client} from "../../api/api.ts";
 import {useParams} from "react-router-dom";
-import type {Content, Season} from "../../api/types.ts";
+import type {SeasonMetadata} from "../../api/types.ts";
+import {LanguageInput, StringInput, TextAreaInput} from "./MetadataInputs.tsx";
+import {LanguagesIcon, SaveIcon} from "lucide-react";
+
+type TranslationField = "translatedTitle" | "translatedDescription";
+
+function setTranslationValue(
+	episode: SeasonMetadata,
+	field: TranslationField,
+	language: string,
+	value: string,
+): SeasonMetadata {
+	return {
+		...episode,
+		[field]: {
+			...episode[field],
+			[language]: value,
+		},
+	};
+}
+
+function addTranslationLanguage(episode: SeasonMetadata, key: string): SeasonMetadata {
+	let language = key;
+	let counter = 2;
+
+	while (
+		language in episode.translatedTitle ||
+		language in episode.translatedDescription
+		) {
+		language = `${key}${counter}`;
+		counter++;
+	}
+
+	return {
+		...episode,
+		translatedTitle: {
+			...episode.translatedTitle,
+			[language]: episode.title,
+		},
+		translatedDescription: {
+			...episode.translatedDescription,
+			[language]: episode.description,
+		},
+	};
+}
+
+function renameTranslationLanguage(
+	episode: SeasonMetadata,
+	oldLanguage: string,
+	newLanguage: string,
+): SeasonMetadata {
+	if (!newLanguage || oldLanguage === newLanguage) {
+		return episode;
+	}
+
+	const renameRecordKey = (record: Record<string, string>) => {
+		const {[oldLanguage]: oldValue, ...withoutOldLanguage} = record;
+
+		return {
+			...withoutOldLanguage,
+			[newLanguage]: oldValue ?? record[newLanguage] ?? "",
+		};
+	};
+
+	return {
+		...episode,
+		translatedTitle: renameRecordKey(episode.translatedTitle),
+		translatedDescription: renameRecordKey(episode.translatedDescription),
+	};
+}
 
 export default function MetadataEditorSeasonPage() {
-	const [content, setContent] = useState<Content | null>(null);
-	const [season, setSeason] = useState<Season | null>(null);
+	const [season, setSeason] = useState<SeasonMetadata | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const {contentId, seasonIndex} = useParams();
 
 	useEffect(() => {
-		if (!contentId) return;
+		if (!contentId || !seasonIndex) return;
 		(async () => {
 			try {
 				setLoading(true);
-				setContent(await client.getContentDetails(contentId));
-				const seasons = await client.getContentSeasons(contentId);
-				setSeason(seasons.filter(x => x.index.toString() == seasonIndex)[0]);
+				setSeason(await client.getSeasonMetadata(contentId, Number.parseInt(seasonIndex)));
 			} catch (err) {
 				setError("Failed to load season info: " + err);
 			} finally {
@@ -26,6 +92,17 @@ export default function MetadataEditorSeasonPage() {
 			}
 		})();
 	}, [contentId, seasonIndex]);
+
+	const allLocalizationKeys = useMemo(() => {
+		if (!season) return [];
+		const keys = [];
+		for (const key in season.translatedTitle)
+			if (season.translatedTitle[key]) keys.push(key);
+		for (const key in season.translatedDescription)
+			if (season.translatedDescription[key]) keys.push(key);
+
+		return [...new Set(keys)];
+	}, [season]);
 
 	if (!contentId || !seasonIndex) {
 		return <div>Invalid URL</div>
@@ -37,8 +114,79 @@ export default function MetadataEditorSeasonPage() {
 
 	return (<>
 		<h2>Season Information</h2>
-		<p><b>Content Name:</b> {content?.translatedTitle ?? content?.originalTitle}</p>
-		<p><b>Season Index:</b> {season.index}</p>
-		<p>Season metadata is not supported yet.</p>
+
+		<StringInput label={"Title"} value={season.title}
+					 onChange={v => setSeason({...season, title: v || `Season ${seasonIndex}`})} placeholder={`Season ${seasonIndex}`}/>
+		<TextAreaInput label={"Description"} value={season.description || ""}
+					 onChange={v => setSeason({...season, description: v})} placeholder={""}/>
+		<StringInput label={"Poster URL"} value={season.poster || ""}
+					 onChange={v => setSeason({...season, poster: v})} placeholder={"Leave blank to remove"}/>
+
+		<div className={"titleWithButton"}>
+			<h3>Translations</h3>
+			<button className={"settingsInput-button settingsInput-save"}
+					onClick={() => {
+						setSeason(current => {
+							if (current == null) return null;
+							const key = prompt("Enter the key for the new translation: (e.g: en_US, fr)");
+							if (key == null || key.length === 0) return current;
+							return addTranslationLanguage(current, key);
+						});
+					}}>
+				<LanguagesIcon/>
+				<span>Add Translation</span>
+			</button>
+		</div>
+
+		{allLocalizationKeys.map(language => (
+			<details key={language}>
+				<summary>
+					<b>{language}</b>
+				</summary>
+				<LanguageInput
+					label={"Language"}
+					value={language}
+					onChange={newLanguage => {
+						setSeason(current => {
+							if (current == null) return null;
+							return renameTranslationLanguage(current, language, newLanguage.trim());
+						});
+					}}
+				/>
+				<StringInput
+					label={"Title"}
+					value={season.translatedTitle[language] ?? ""}
+					onChange={value => {
+						setSeason(current => {
+							if (current == null) return null;
+							return setTranslationValue(current, "translatedTitle", language, value);
+						});
+					}}
+				/>
+				<StringInput
+					label={"Summary"}
+					value={season.translatedDescription[language] ?? ""}
+					onChange={value => {
+						setSeason(current => {
+							if (current == null) return null;
+							return setTranslationValue(current, "translatedDescription", language, value);
+						});
+					}}
+				/>
+			</details>
+		))}
+
+		<div style={{height: '32px'}}/>
+
+		<button onClick={async () => {
+			const result = await client.setSeasonMetadata(season);
+			if (result.success && result.data)
+				setSeason(result.data);
+			else
+				alert(result.message);
+		}} className={"settingsInput-button settingsInput-save"}>
+			<SaveIcon/>
+			<span>Save Content</span>
+		</button>
 	</>);
 }
