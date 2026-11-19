@@ -37,7 +37,7 @@ export default function SearchPage() {
 		(async () => {
 			try {
 				const resp = await client.search(query, filterType, 0, 50, libraryId);
-				setContent(resp.results);
+				setContent(resp.items);
 			} catch (e) {
 				console.error("Failed to load jobs", e);
 				setError(e as Error)
