@@ -34,6 +34,7 @@ import MetadataEditorLibraryPage from "./pages/metadataeditor/MetadataEditorLibr
 import MetadataEditorContentPage from "./pages/metadataeditor/MetadataEditorContentPage.tsx";
 import MetadataEditorSeasonPage from "./pages/metadataeditor/MetadataEditorSeasonPage.tsx";
 import MetadataEditorEpisodePage from "./pages/metadataeditor/MetadataEditorEpisodePage.tsx";
+import ListPlugins from "./pages/settings/Plugins.tsx";
 
 export default function App() {
 	return (
@@ -87,6 +88,7 @@ function AppRoutes() {
 					<Route path="webhooks/:id" element={<EditWebhook/>}/>
 					<Route path="jobs" element={<JobsTab/>}/>
 					<Route path="orphanVideos" element={<OrphanVideos/>}/>
+					<Route path="plugins" element={<ListPlugins/>}/>
 				</Route>
 				<Route path="/metadataEditor" element={<MetadataEditorPage/>}>
 					<Route path={"/metadataEditor/:libraryId"} element={<MetadataEditorLibraryPage/>}/>

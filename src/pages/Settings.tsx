@@ -1,6 +1,7 @@
 import "./Settings.css";
 import {NavLink, Outlet} from "react-router-dom";
 import {
+	BlocksIcon,
 	CpuIcon,
 	FileVideoCameraIcon,
 	FileVideoIcon,
@@ -11,6 +12,7 @@ import {
 	WebhookIcon
 } from "lucide-react";
 import {useAuth} from "../auth/AuthContext.tsx";
+import type {ReactElement} from "react";
 
 
 export default function Settings() {
@@ -29,18 +31,23 @@ export default function Settings() {
 	return (
 		<div className={"settingsPage"}>
 			<div className={"settingsCategories"}>
-				{hasPermissions(["ReadSettings", "WriteSettings"]) && <NavLink to={"transcode"} className={"settingsCategory"}><FileVideoCameraIcon/><span>Transcoding</span></NavLink>}
-				{hasPermissions(["Admin"]) && <NavLink to={"benchmark"} className={"settingsCategory"}><GpuIcon/><span>Benchmark</span></NavLink>}
-				{hasPermissions(["ReadAllUsers", "WriteUsers"]) && <NavLink to={"users"} className={"settingsCategory"}><UsersIcon/><span>Users</span></NavLink>}
-				{hasPermissions(["WriteLibraries"]) && <NavLink to={"libraries"} className={"settingsCategory"}><FolderIcon/><span>Transcode Libraries</span></NavLink>}
-				{hasPermissions(["WriteLibraries"]) && <NavLink to={"inputLibraries"} className={"settingsCategory"}><FolderInputIcon/><span>Input Libraries</span></NavLink>}
-				{hasPermissions(["ReadWebhooks", "WriteWebhooks"]) && <NavLink to={"webhooks"} className={"settingsCategory"}><WebhookIcon/><span>Webhooks</span></NavLink>}
-				{hasPermissions(["ReadJobs", "WriteJobs"]) && <NavLink to={"jobs"} className={"settingsCategory"}><CpuIcon/><span>Jobs</span></NavLink>}
-				{hasPermissions(["WriteVideos"]) && <NavLink to={"orphanVideos"} className={"settingsCategory"}><FileVideoIcon/><span>Orphaned Videos</span></NavLink>}
+				{hasPermissions(["ReadSettings", "WriteSettings"]) && <PageLink to={"transcode"} icon={<FileVideoCameraIcon/>} label="Transcoding"/>}
+				{hasPermissions(["Admin"]) && <PageLink to={"benchmark"} icon={<GpuIcon/>} label="Benchmark"/>}
+				{hasPermissions(["ReadAllUsers", "WriteUsers"]) && <PageLink to={"users"} icon={<UsersIcon/>} label="Users"/>}
+				{hasPermissions(["WriteLibraries"]) && <PageLink to={"libraries"} icon={<FolderIcon/>} label="Transcode Libraries"/>}
+				{hasPermissions(["WriteLibraries"]) && <PageLink to={"inputLibraries"} icon={<FolderInputIcon/>} label="Input Libraries"/>}
+				{hasPermissions(["ReadWebhooks", "WriteWebhooks"]) && <PageLink to={"webhooks"} icon={<WebhookIcon/>} label="Webhooks"/>}
+				{hasPermissions(["ReadJobs", "WriteJobs"]) && <PageLink to={"jobs"} icon={<CpuIcon/>} label="Jobs"/>}
+				{hasPermissions(["WriteVideos"]) && <PageLink to={"orphanVideos"} icon={<FileVideoIcon/>} label="Orphaned Videos"/>}
+				{hasPermissions(["Admin"]) && <PageLink to={"plugins"} icon={<BlocksIcon/>} label="Plugins"/>}
 			</div>
 			<div className={"settingsItems"}>
 				<Outlet/>
 			</div>
 		</div>
 	);
+}
+
+function PageLink({to, icon, label}: {to: string, icon: ReactElement, label: string}) {
+	return <NavLink to={to} className={"settingsCategory"}>{icon}<span>{label}</span></NavLink>
 }
