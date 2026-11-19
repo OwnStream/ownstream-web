@@ -3,7 +3,7 @@ import {client} from "../../api/api.ts";
 import {useParams} from "react-router-dom";
 import type {ContentMetadata} from "../../api/types.ts";
 import {DateInput, LanguageInput, StringInput, TextAreaInput} from "./MetadataInputs.tsx";
-import {LanguagesIcon, SaveIcon} from "lucide-react";
+import {LanguagesIcon, RefreshCwIcon, SaveIcon} from "lucide-react";
 
 type TranslationField = "translatedTitle" | "translatedTagline" | "translatedDescription";
 
@@ -120,7 +120,21 @@ export default function MetadataEditorContentPage() {
 	if (!content) return <div>library is null!</div>;
 
 	return (<>
-		<h2>Edit Content</h2>
+		<div className={"titleWithButton"}>
+			<h2>Edit Content</h2>
+			<button className={"settingsInput-button settingsInput-save"}
+					style={{marginTop: "16px"}}
+					onClick={() => {
+						setLoading(true);
+						client.refreshContentMetadata(contentId, false).then(x => {
+							setContent(x);
+							setLoading(false);
+						})
+					}}>
+				<RefreshCwIcon/>
+				<span>Refresh with plugins</span>
+			</button>
+		</div>
 		<p>ID: <code>{content.id}</code></p>
 		<StringInput label={"Title"} value={content.title} onChange={v => setContent({...content, title: v})}/>
 		<StringInput label={"Tagline"} value={content.tagline} onChange={v => setContent({...content, tagline: v})}/>

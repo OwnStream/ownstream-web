@@ -101,7 +101,7 @@ Testing out nested classes
 			flex-direction: row;
 			align-items: center;
 
-			h3 {
+			h2, h3 {
 				flex-grow: 1;
 				margin: 0;
 			}

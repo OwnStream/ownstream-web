@@ -4,7 +4,7 @@ import {client} from "../../api/api.ts";
 import {useParams} from "react-router-dom";
 import type {SeasonMetadata} from "../../api/types.ts";
 import {LanguageInput, StringInput, TextAreaInput} from "./MetadataInputs.tsx";
-import {LanguagesIcon, SaveIcon} from "lucide-react";
+import {LanguagesIcon, RefreshCwIcon, SaveIcon} from "lucide-react";
 
 type TranslationField = "translatedTitle" | "translatedDescription";
 
@@ -113,12 +113,28 @@ export default function MetadataEditorSeasonPage() {
 	if (!season) return <div>library is null!</div>;
 
 	return (<>
-		<h2>Season Information</h2>
+		<div className={"titleWithButton"}>
+			<h2>Season Information</h2>
+			<button className={"settingsInput-button settingsInput-save"}
+					style={{marginTop: "16px"}}
+					onClick={() => {
+						setLoading(true);
+						client.refreshSeasonMetadata(contentId, Number.parseInt(seasonIndex), false).then(x => {
+							setSeason(x);
+							setLoading(false);
+						})
+					}}>
+				<RefreshCwIcon/>
+				<span>Refresh with plugins</span>
+			</button>
+		</div>
+
 
 		<StringInput label={"Title"} value={season.title}
-					 onChange={v => setSeason({...season, title: v || `Season ${seasonIndex}`})} placeholder={`Season ${seasonIndex}`}/>
+					 onChange={v => setSeason({...season, title: v || `Season ${seasonIndex}`})}
+					 placeholder={`Season ${seasonIndex}`}/>
 		<TextAreaInput label={"Description"} value={season.description || ""}
-					 onChange={v => setSeason({...season, description: v})} placeholder={""}/>
+					   onChange={v => setSeason({...season, description: v})} placeholder={""}/>
 		<StringInput label={"Poster URL"} value={season.poster || ""}
 					 onChange={v => setSeason({...season, poster: v})} placeholder={"Leave blank to remove"}/>
 

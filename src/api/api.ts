@@ -381,7 +381,7 @@ class OwnStreamApiClient {
 	}
 
 	async refreshEpisodeMetadata(id: string, apply: boolean = true): Promise<EpisodeMetadata> {
-		return await this.request<EpisodeMetadata>(`api/metadata/episode/${id}?apply=${apply}`, undefined, "POST");
+		return await this.request<EpisodeMetadata>(`api/metadata/episode/${id}/refresh?apply=${apply}`, undefined, "POST");
 	}
 
 	async setEpisodeMetadata(metadata: EpisodeMetadata): Promise<SuccessResponse<EpisodeMetadata>> {

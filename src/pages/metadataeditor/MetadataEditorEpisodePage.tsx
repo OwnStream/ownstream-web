@@ -3,7 +3,7 @@ import {client} from "../../api/api.ts";
 import {useParams} from "react-router-dom";
 import type {EpisodeMetadata} from "../../api/types.ts";
 import {DateInput, LanguageInput, NumberInput, StringInput, TextAreaInput} from "./MetadataInputs.tsx";
-import {LanguagesIcon, SaveIcon} from "lucide-react";
+import {LanguagesIcon, RefreshCwIcon, SaveIcon} from "lucide-react";
 
 type TranslationField = "translatedTitle" | "translatedSummary";
 
@@ -112,7 +112,22 @@ export default function MetadataEditorEpisodePage() {
 	if (!episode) return <div>library is null!</div>;
 
 	return (<>
-		<h2>Edit Content</h2>
+		<div className={"titleWithButton"}>
+			<h2>Edit Episode</h2>
+			<button className={"settingsInput-button settingsInput-save"}
+					style={{marginTop: "16px"}}
+					onClick={() => {
+						setLoading(true);
+						client.refreshEpisodeMetadata(episodeId, false).then(x => {
+							setEpisode(x);
+							setLoading(false);
+						})
+					}}>
+				<RefreshCwIcon/>
+				<span>Refresh with plugins</span>
+			</button>
+		</div>
+
 		<p>ID: <code>{episode.id}</code></p>
 		<StringInput label={"Title"} value={episode.title} onChange={v => setEpisode({...episode, title: v})}/>
 		<div className={"doubleRow"}>
