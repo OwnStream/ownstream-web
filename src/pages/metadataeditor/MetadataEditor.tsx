@@ -59,7 +59,7 @@ function LibraryNode({library, selectedLibraryId, selectedContentId, selectedSea
 			{loading && <div>Loading...</div>}
 			{error && <div className={"contentTree-error"}>{error}</div>}
 
-			{contents.filter(x => !x.originalTitle.includes("Stranger")).map(content => (
+			{contents.map(content => (
 				<ContentNode
 					key={content.id}
 					library={library}
@@ -213,9 +213,9 @@ function SeasonNode({library, content, season, selectedContentId, selectedSeason
 export default function MetadataEditorPage() {
 	const [libraries, setLibraries] = useState<Library[]>([]);
 	const {
-		library: selectedLibraryId,
-		content: selectedContentId,
-		season: selectedSeasonIndex
+		libraryId: selectedLibraryId,
+		contentId: selectedContentId,
+		seasonIndex: selectedSeasonIndex
 	} = useParams();
 
 	useEffect(() => {
